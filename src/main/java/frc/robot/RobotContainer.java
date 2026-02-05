@@ -22,6 +22,7 @@ import frc.robot.commands.SubsystemCommands;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FloorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -43,6 +44,7 @@ public class RobotContainer {
   private final FeederSubsystem feederSubsystem = new FeederSubsystem();
   private final FloorSubsystem floorSubsystem = new FloorSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   // The robot's commands
   private final SubsystemCommands subsystemCommands = new SubsystemCommands(
@@ -69,7 +71,7 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
         .whileTrue(new RunCommand(
             () -> driveSubsystem.setX(),
             driveSubsystem));
@@ -80,50 +82,17 @@ public class RobotContainer {
             driveSubsystem));
 
     // Shooting Commands
-    new JoystickButton(m_driverController, 0)
-    .onTrue(subsystemCommands.shootManually());
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+      .onTrue(subsystemCommands.shootManually());
+
+    // Intake Commands
+    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
+      .onTrue(intakeSubsystem.intakeCommand());
   }
 
 
   public Command getAutonomousCommand() {
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        config);
-
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        driveSubsystem::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        driveSubsystem::setModuleStates,
-        driveSubsystem);
-
-    // Reset odometry to the starting pose of the trajectory.
-    driveSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> driveSubsystem.drive(0, 0, 0, false));
+    return null;
   }
 
 public DriveSubsystem getDriveSubsystem() {
