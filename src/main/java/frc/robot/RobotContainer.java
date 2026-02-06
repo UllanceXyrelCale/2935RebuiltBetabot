@@ -50,7 +50,8 @@ public class RobotContainer {
   private final SubsystemCommands subsystemCommands = new SubsystemCommands(
    feederSubsystem,
    floorSubsystem,
-   shooterSubsystem);  
+   shooterSubsystem,
+   intakeSubsystem);  
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -87,7 +88,7 @@ public class RobotContainer {
 
     // Intake Commands
     new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
-      .whileTrue(intakeSubsystem.intakeCommand());
+      .whileTrue(subsystemCommands.intakeManually());
   }
 
 

@@ -7,13 +7,11 @@ import static edu.wpi.first.units.Units.RPM;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.KrakenX60;
+import frc.robot.Constants.FloorConstants;
+import frc.robot.Constants.MotorIDConstants;
 
 public class FloorSubsystem extends SubsystemBase {
   public enum Speed {
@@ -36,31 +34,31 @@ public class FloorSubsystem extends SubsystemBase {
 
   /** Creates a new FloorSubsystem. */
   public FloorSubsystem() {
-    floorMotor = new TalonFX(32);
+    floorMotor = new TalonFX(MotorIDConstants.floorMotorID);
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 
     // Set motor outputs
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    config.MotorOutput.NeutralMode = FloorConstants.neutralMode;
+    config.MotorOutput.Inverted = FloorConstants.isInverted;
 
     // Current limit
-    config.CurrentLimits.SupplyCurrentLimit = 30.0;
-    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.SupplyCurrentLimit = FloorConstants.supplyCurrentLimit;
+    config.CurrentLimits.SupplyCurrentLimitEnable = FloorConstants.supplyCurrentLimitEnable;
 
     // Feedback
-    config.Feedback.SensorToMechanismRatio = 1.0;
+    config.Feedback.SensorToMechanismRatio = FloorConstants.sensorToMechanismRatio;
 
     // Set up PID
-    config.Slot0.kP = 1;
-    config.Slot0.kI = 0;
-    config.Slot0.kD = 0;
-    config.Slot0.kV = 12.0 / KrakenX60.kFreeSpeed.in(RotationsPerSecond);
+    config.Slot0.kP = FloorConstants.kP;
+    config.Slot0.kI = FloorConstants.kI;
+    config.Slot0.kD = FloorConstants.kD;
+    config.Slot0.kV = FloorConstants.kV;
 
     // Applies the actual configs to the motor
     floorMotor.getConfigurator().apply(config); 
-    velocityRequest = new VelocityVoltage(0).withSlot(0);
-    voltageRequest = new VoltageOut(0);
+    velocityRequest = new VelocityVoltage(FloorConstants.velocityVoltage).withSlot(FloorConstants.slot);
+    voltageRequest = new VoltageOut(FloorConstants.voltageOut);
   }
 
    public void setFloor(Speed speed) {

@@ -8,13 +8,11 @@ import static edu.wpi.first.units.Units.RPM;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.KrakenX60;
+import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.MotorIDConstants;
 
 public class FeederSubsystem extends SubsystemBase {
   public enum Speed {
@@ -37,31 +35,31 @@ public class FeederSubsystem extends SubsystemBase {
 
   /** Creates a new FloorSubsystem. */
   public FeederSubsystem() {
-    feederMotor = new TalonFX(31);
+    feederMotor = new TalonFX(MotorIDConstants.feederMotorID);
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 
     // Set motor outputs
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    config.MotorOutput.NeutralMode = FeederConstants.neutralMode;
+    config.MotorOutput.Inverted = FeederConstants.isInverted;
 
     // Current limit
-    config.CurrentLimits.SupplyCurrentLimit = 30.0;
-    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.SupplyCurrentLimit = FeederConstants.supplyCurrentLimit;
+    config.CurrentLimits.SupplyCurrentLimitEnable = FeederConstants.supplyCurrentLimitEnable;
 
     // Feedback
-    config.Feedback.SensorToMechanismRatio = 1.0;
+    config.Feedback.SensorToMechanismRatio = FeederConstants.sensorToMechanismRatio;
 
     // Set up PID
-    config.Slot0.kP = 1;
-    config.Slot0.kI = 0;
-    config.Slot0.kD = 0;
-    config.Slot0.kV = 12.0 / KrakenX60.kFreeSpeed.in(RotationsPerSecond);
+    config.Slot0.kP = FeederConstants.kP;
+    config.Slot0.kI = FeederConstants.kI;
+    config.Slot0.kD = FeederConstants.kD;
+    config.Slot0.kV = FeederConstants.kV;
 
     // Applies the actual configs to the motor
     feederMotor.getConfigurator().apply(config); 
-    velocityRequest = new VelocityVoltage(0).withSlot(0);
-    voltageRequest = new VoltageOut(0);
+    velocityRequest = new VelocityVoltage(FeederConstants.velocityVoltage).withSlot(FeederConstants.slot);
+    voltageRequest = new VoltageOut(FeederConstants.voltageOut);
   }
 
    public void setFeeder(Speed speed) {
