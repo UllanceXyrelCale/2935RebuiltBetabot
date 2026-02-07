@@ -5,19 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetShooterVelocity extends Command {
-  /** Creates a new SetShooterVelocity. */
-  private final ShooterSubsystem shooterSubsystem;
-  private final double targetVelocity;
+public class StartFeeder extends Command {
+  /** Creates a new StartFeeder. */
+  private final FeederSubsystem feederSubsystem;
 
-  public SetShooterVelocity(ShooterSubsystem shooterSubsystem, double targetVelocity) {
+  public StartFeeder(FeederSubsystem feederSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.shooterSubsystem = shooterSubsystem;
-    this.targetVelocity = targetVelocity;
-    addRequirements(shooterSubsystem);
+    this.feederSubsystem = feederSubsystem;
+    addRequirements(feederSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -27,18 +25,18 @@ public class SetShooterVelocity extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setVelocity(targetVelocity); 
+    feederSubsystem.start();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.stop();
+    feederSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooterSubsystem.atTargetSpeed(targetVelocity, 100);
+    return false;
   }
 }

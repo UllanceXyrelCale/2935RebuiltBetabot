@@ -9,36 +9,36 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 
-public class FeederSubsystem extends SubsystemBase {
-  /** Creates a new FeederSubsystem. */
+public class IntakeSubsystem extends SubsystemBase {
+  /** Creates a new IntakeSubsystem. */
 
   // initalize motor
-  private final TalonFX feederMotor;
+  private final TalonFX intakeMotor;
 
   // set control type
   private final VelocityVoltage velocityRequest;
 
-  public FeederSubsystem() {
+  public IntakeSubsystem() {
     // Change CAN ID FOR TESTING
-    feederMotor = new TalonFX(31);
+    intakeMotor = new TalonFX(31);
 
     // Configure motor
-    feederMotor.getConfigurator().apply(Configs.feederMotor.feederConfig);
+    intakeMotor.getConfigurator().apply(Configs.intakeMotor.intakeConfig);
 
     // Setup velocity
     velocityRequest = new VelocityVoltage(0).withSlot(0);
   }
 
   public void start() {
-    feederMotor.setControl(velocityRequest.withVelocity(1000)); // make sure this is double
+    intakeMotor.setControl(velocityRequest.withVelocity(1000)); // make sure this is double
   }
 
   public void stop() {
-    feederMotor.stopMotor();
+    intakeMotor.stopMotor();
   }
 
   public boolean atTargetSpeed(double targetRPS, double tolerance) {
-      return Math.abs(feederMotor.getVelocity().getValueAsDouble() - targetRPS) < tolerance;
+      return Math.abs(intakeMotor.getVelocity().getValueAsDouble() - targetRPS) < tolerance;
   }
 
   @Override

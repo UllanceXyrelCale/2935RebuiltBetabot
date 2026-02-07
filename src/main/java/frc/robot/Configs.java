@@ -101,4 +101,108 @@ public final class Configs {
 
     }
 
+    public static final class feederMotor {        
+        // Create configuration class for our feeder motors
+        public static final TalonFXConfiguration feederConfig = new TalonFXConfiguration();
+
+        static {
+
+            // Coast or Brake
+            feederConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+            // Current Limits
+            feederConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+            // Invert Motor
+            feederConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+            // Gear Ratio
+            feederConfig.Feedback.SensorToMechanismRatio = 1.0;
+
+            // PID VALUES
+            // ONLY ADJUST THE P
+            // IF YOU ADJUST GO IN VERY VERY SMALL INCREMENTS
+            // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
+            // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
+
+            feederConfig.Slot0.kP = 0.1;
+            feederConfig.Slot0.kI = 0.0;
+            feederConfig.Slot0.kD = 0.0;
+            feederConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+
+            // Voltage Control
+
+            feederConfig.Voltage.PeakForwardVoltage = 12.0;
+            feederConfig.Voltage.PeakReverseVoltage = -12.0;
+
+        }
+        
+    }
+
+    public static final class floorMotor {
+
+        public static final TalonFXConfiguration floorConfig = new TalonFXConfiguration();
+        static {
+
+            floorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+            floorConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            floorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+            floorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+    
+            floorConfig.Feedback.SensorToMechanismRatio = 1.0;
+
+            floorConfig.Slot0.kP = 0.1;
+            floorConfig.Slot0.kI = 0.0;
+            floorConfig.Slot0.kD = 0.0;
+            floorConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+
+            // Voltage Control
+
+            floorConfig.Voltage.PeakForwardVoltage = 12.0;
+            floorConfig.Voltage.PeakReverseVoltage = -12.0;
+
+        }
+
+    }
+
+        public static final class intakeMotor {        
+        // Create configuration class for our intake motors
+        public static final TalonFXConfiguration intakeConfig = new TalonFXConfiguration();
+
+        static {
+
+            // Coast or Brake
+            intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+            // Current Limits
+            intakeConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            intakeConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+            // Invert Motor
+            intakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+            // Gear Ratio
+            intakeConfig.Feedback.SensorToMechanismRatio = 1.0;
+
+            // PID VALUES
+            // ONLY ADJUST THE P
+            // IF YOU ADJUST GO IN VERY VERY SMALL INCREMENTS
+            // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
+            // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
+
+            intakeConfig.Slot0.kP = 0.1;
+            intakeConfig.Slot0.kI = 0.0;
+            intakeConfig.Slot0.kD = 0.0;
+            intakeConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+
+            // Voltage Control
+
+            intakeConfig.Voltage.PeakForwardVoltage = 12.0;
+            intakeConfig.Voltage.PeakReverseVoltage = -12.0;
+        }
+    }
 }

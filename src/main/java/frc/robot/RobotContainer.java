@@ -12,7 +12,13 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SetShooterVelocity;
+import frc.robot.commands.StartFeeder;
+import frc.robot.commands.StartFloor;
+import frc.robot.commands.StartIntake;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.FloorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -23,7 +29,10 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final FeederSubsystem m_feederSubsystem = new FeederSubsystem();
+  private final FloorSubsystem m_FloorSubsystem = new FloorSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -69,7 +78,16 @@ public class RobotContainer {
             m_robotDrive));
 
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-      .whileTrue(new SetShooterVelocity(s_shooterSubsystem, 250));
+      .whileTrue(new SetShooterVelocity(m_shooterSubsystem, 250));
+
+    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
+      .whileTrue(new StartIntake(m_intakeSubsystem));
+
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
+      .whileTrue(new StartFeeder(m_feederSubsystem));
+
+    new JoystickButton(m_driverController, XboxController.Button.kB.value)
+      .whileTrue(new StartFloor(m_FloorSubsystem));
 
   }
 
