@@ -1,12 +1,12 @@
 package frc.robot;
 
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.ModuleConstants;
 
@@ -23,7 +23,7 @@ public final class Configs {
             drivingConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             drivingConfig.CurrentLimits.SupplyCurrentLimit = 50;
             drivingConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-            drivingConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            drivingConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
             drivingConfig.Feedback.SensorToMechanismRatio = ModuleConstants.kDrivingMotorReduction;
 
             drivingConfig.Slot0.kP = 0.1;
@@ -60,4 +60,45 @@ public final class Configs {
                     .positionWrappingInputRange(0, turningFactor);
         }
     }
+
+    public static final class shootingMotor {
+
+        // Create configuration class for our shooting motors
+        public static final TalonFXConfiguration shootingConfig = new TalonFXConfiguration();
+
+        static {
+
+            // Coast or Brake
+            shootingConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+            // Current Limits
+            shootingConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            shootingConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+            // Invert Motor
+            shootingConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+            // Gear Ratio
+            shootingConfig.Feedback.SensorToMechanismRatio = 1.0;
+
+            // PID VALUES
+            // ONLY ADJUST THE P
+            // IF YOU ADJUST GO IN VERY VERY SMALL INCREMENTS
+            // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
+            // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
+
+            shootingConfig.Slot0.kP = 0.1;
+            shootingConfig.Slot0.kI = 0.0;
+            shootingConfig.Slot0.kD = 0.0;
+            shootingConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+
+            // Voltage Control
+
+            shootingConfig.Voltage.PeakForwardVoltage = 12.0;
+            shootingConfig.Voltage.PeakReverseVoltage = -12.0;
+
+        }
+
+    }
+
 }

@@ -1,86 +1,56 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
-import java.util.List;
-
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import static edu.wpi.first.units.Units.RPM;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.MotorIDConstants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Configs;
 
 public class ShooterSubsystem extends SubsystemBase {
-  // Initialize variables needed to run subsystem
-  private final TalonFX leftMotor, rightMotor;
-  private final List <TalonFX> motors;
-  private final VelocityVoltage velocityRequest = new VelocityVoltage(ShooterConstants.velocityVoltage).withSlot(ShooterConstants.slot);
+  /** Creates a new ShooterSubsystem. */
+
+  // initalize motor
+  private final TalonFX leftMotor;
+  private final TalonFX rightMotor;
+
+  // set control type
+  private final VelocityVoltage velocityRequest;
 
   public ShooterSubsystem() {
-    leftMotor = new TalonFX(MotorIDConstants.leftShooterMotorID);
-    rightMotor = new TalonFX(MotorIDConstants.rightShooterMotorID);
+    // Change CAN ID FOR TESTING
+    leftMotor = new TalonFX(52);
+    rightMotor = new TalonFX(40);
 
-    configureMotor(leftMotor, InvertedValue.CounterClockwise_Positive);
-    configureMotor(rightMotor, InvertedValue.Clockwise_Positive);
+    // Configure motor
+    leftMotor.getConfigurator().apply(Configs.shootingMotor.shootingConfig);
+    rightMotor.getConfigurator().apply(Configs.shootingMotor.shootingConfig);
 
-    motors = List.of(leftMotor, rightMotor);
+    // Setup velocity
+    velocityRequest = new VelocityVoltage(0).withSlot(0);
   }
 
-  public void configureMotor(TalonFX motor, InvertedValue invertDirection) {
-    // ----------- Configures the motor ---------- //
-    TalonFXConfiguration config = new TalonFXConfiguration();
-
-    // Set motor outputs
-    config.MotorOutput.NeutralMode = ShooterConstants.neutralMode;
-    config.MotorOutput.Inverted = invertDirection;
-
-    // Current limit
-    config.CurrentLimits.SupplyCurrentLimit = ShooterConstants.supplyCurrentLimit;
-    config.CurrentLimits.SupplyCurrentLimitEnable = ShooterConstants.supplyCurrentLimitEnable;
-
-    // Feedback
-    config.Feedback.SensorToMechanismRatio = ShooterConstants.sensorToMechanismRatio;
-
-    // Set up PID
-    config.Slot0.kP = ShooterConstants.kP;
-    config.Slot0.kI = ShooterConstants.kI;
-    config.Slot0.kD = ShooterConstants.kD;
-    config.Slot0.kV = ShooterConstants.kV;
-
-
-    // Applies the actual configs to the motor
-    motor.getConfigurator().apply(config); 
+  public void setVelocity(double shooterVelocity) {
+    leftMotor.setControl(velocityRequest.withVelocity(shooterVelocity)); // make sure this is double
+    rightMotor.setControl(velocityRequest.withVelocity(shooterVelocity));
   }
 
-  public boolean atTargetSpeed() {
-     return motors.stream().allMatch(motor -> {
-            final boolean isInVelocityMode = motor.getAppliedControl().equals(velocityRequest);
-            final AngularVelocity currentVelocity = motor.getVelocity().getValue();
-            final AngularVelocity targetVelocity = velocityRequest.getVelocityMeasure();
-            return isInVelocityMode && currentVelocity.isNear(targetVelocity, 50);
-        });
+  public void stop() {
+    leftMotor.stopMotor();
+    rightMotor.stopMotor();
   }
 
-  public void setShooter(double rpm) {
-    for (TalonFX motor : motors) {
-      motor.setControl(velocityRequest.withVelocity(RPM.of(rpm)));
-    }
-  }
-
-  public Command shooterCommand(double rpm) {
-    return runOnce(() -> setShooter(rpm))
-    .andThen(Commands.waitUntil(this::atTargetSpeed));
-  }
-
-  public Command shooterStop() {
-    return runOnce(() -> setShooter(0));
+  public boolean atTargetSpeed(double targetRPS, double tolerance) {
+      return Math.abs(leftMotor.getVelocity().getValueAsDouble() - targetRPS) < tolerance && Math.abs(rightMotor.getVelocity().getValueAsDouble() - targetRPS) < tolerance;
   }
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Shooter Velocity", leftMotor.getVelocity().getValueAsDouble());
   }
 }
