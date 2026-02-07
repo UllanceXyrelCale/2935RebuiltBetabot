@@ -8,13 +8,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import static edu.wpi.first.units.Units.RPM;
-
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
-import edu.wpi.first.units.measure.AngularVelocity;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -36,9 +29,9 @@ public final class Constants {
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(30);
+    public static final double kTrackWidth = Units.inchesToMeters(27);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(25);
+    public static final double kWheelBase = Units.inchesToMeters(27);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -65,7 +58,7 @@ public final class Constants {
 
     public static final int kGryoID = 24;
 
-    public static final boolean kGyroReversed = false;
+    public static final boolean kGyroReversed = true;
   }
 
   public static final class ModuleConstants {
@@ -107,94 +100,6 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
-  public static final class MotorIDConstants {
-    // Other subsystem constants
-    public static final int leftShooterMotorID = 51;
-    public static final int rightShooterMotorID = 52;
-    public static final int floorMotorID = 32;
-    public static final int intakeMotorID = 40;
-    public static final int feederMotorID = 31;
-  }
-
-  public static final class FeederConstants {
-    // Configs constants
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final InvertedValue isInverted = InvertedValue.Clockwise_Positive;
-    public static final double supplyCurrentLimit = 30.0;
-    public static final boolean supplyCurrentLimitEnable = true;
-    public static final double sensorToMechanismRatio = 1.0;
-
-    // PID constants
-    public static final double kP = 1.0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double kV = 12.0 / KrakenX60.kFreeSpeed.in(RotationsPerSecond);
-
-    // Request values
-    public static final double velocityVoltage = 0.0;
-    public static final int slot = 0;
-    public static final double voltageOut = 0.0;
-  }
-
-  public static final class FloorConstants {
-    // Configs constants
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final InvertedValue isInverted = InvertedValue.Clockwise_Positive;
-    public static final double supplyCurrentLimit = 30.0;
-    public static final boolean supplyCurrentLimitEnable = true;
-    public static final double sensorToMechanismRatio = 1.0;
-
-    // PID constants
-    public static final double kP = 1.0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double kV = 12.0 / KrakenX60.kFreeSpeed.in(RotationsPerSecond);
-
-    // Request values
-    public static final double velocityVoltage = 0.0;
-    public static final int slot = 0;
-    public static final double voltageOut = 0.0;
-  }
-
-    public static final class IntakeConstants {
-    // Configs constants
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
-    public static final InvertedValue isInverted = InvertedValue.Clockwise_Positive;
-    public static final double supplyCurrentLimit = 30.0;
-    public static final boolean supplyCurrentLimitEnable = true;
-    public static final double sensorToMechanismRatio = 1.0;
-
-    // PID constants
-    public static final double kP = 1.0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double kV = 12.0 / KrakenX60.kFreeSpeed.in(RotationsPerSecond);
-
-    // Request values
-    public static final double velocityVoltage = 0.0;
-    public static final int slot = 0;
-    public static final double voltageOut = 0.0;
-  }
-
-  public static final class ShooterConstants {
-    // Configs constants
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
-    public static final double supplyCurrentLimit = 70.0;
-    public static final boolean supplyCurrentLimitEnable = true;
-    public static final double sensorToMechanismRatio = 1.0;
-
-    // PID constants
-    public static final double kP = 0.5;
-    public static final double kI = 2;
-    public static final double kD = 0;
-    public static final double kV = 12.0 / KrakenX60.kFreeSpeed.in(RotationsPerSecond);
-
-    // Request values
-    public static final double velocityVoltage = 0.0;
-    public static final int slot = 0;
-  }
-
-
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
@@ -203,7 +108,7 @@ public final class Constants {
     public static final double kFreeSpeedRps = 100;
   }
 
-    public static class KrakenX60 {
-      public static final AngularVelocity kFreeSpeed = RPM.of(6000);
+  public static class KrakenX60 {
+    public static final double kFreeSpeed = 6000.0; // RPM
   }
 }
