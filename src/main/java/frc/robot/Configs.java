@@ -115,7 +115,7 @@ public final class Configs {
             feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
             // Invert Motor
-            feederConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            feederConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
             // Gear Ratio
             feederConfig.Feedback.SensorToMechanismRatio = 1.0;
@@ -150,7 +150,7 @@ public final class Configs {
             floorConfig.CurrentLimits.SupplyCurrentLimit = 50;
             floorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-            floorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            floorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     
             floorConfig.Feedback.SensorToMechanismRatio = 1.0;
