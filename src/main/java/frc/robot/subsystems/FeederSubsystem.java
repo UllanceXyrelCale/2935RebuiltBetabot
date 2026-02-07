@@ -30,7 +30,7 @@ public class FeederSubsystem extends SubsystemBase {
   }
 
   public void start() {
-    feederMotor.setControl(velocityRequest.withVelocity(1000)); // make sure this is double
+    feederMotor.setControl(velocityRequest.withVelocity(100)); // make sure this is double
   }
 
   public void stop() {

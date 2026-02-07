@@ -30,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void start() {
-    intakeMotor.setControl(velocityRequest.withVelocity(1000)); // make sure this is double
+    intakeMotor.setControl(velocityRequest.withVelocity(100)); // make sure this is double
   }
 
   public void stop() {
