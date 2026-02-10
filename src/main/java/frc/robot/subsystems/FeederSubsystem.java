@@ -29,8 +29,8 @@ public class FeederSubsystem extends SubsystemBase {
     velocityRequest = new VelocityVoltage(0).withSlot(0);
   }
 
-  public void start() {
-    feederMotor.setControl(velocityRequest.withVelocity(100)); // make sure this is double
+  public void setFeeder(double rps) {
+    feederMotor.setControl(velocityRequest.withVelocity(rps)); // make sure this is double
   }
 
   public void stop() {

@@ -5,9 +5,11 @@ import frc.robot.subsystems.FloorSubsystem;
 
 public class StartFloor extends Command {
   private final FloorSubsystem floorSubsystem;
+  private final double floorRPS;
    
-  public StartFloor(FloorSubsystem floorSubsystem) {
+  public StartFloor(FloorSubsystem floorSubsystem, double floorRPS) {
     this.floorSubsystem = floorSubsystem;
+    this.floorRPS = floorRPS;
     addRequirements(floorSubsystem);
     }
 
@@ -16,7 +18,7 @@ public class StartFloor extends Command {
 
   @Override
   public void execute() {
-    floorSubsystem.start();
+    floorSubsystem.setFloor(floorRPS);
   }
 
   @Override

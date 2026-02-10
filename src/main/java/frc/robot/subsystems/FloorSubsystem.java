@@ -17,8 +17,8 @@ public class FloorSubsystem extends SubsystemBase {
     floorMotor.getConfigurator().apply(Configs.floorMotor.floorConfig);
   }
 
-  public void start() {
-    floorMotor.setControl(velocityRequest.withVelocity(100));
+  public void setFloor(double rps) {
+    floorMotor.setControl(velocityRequest.withVelocity(rps));
 
   }
 

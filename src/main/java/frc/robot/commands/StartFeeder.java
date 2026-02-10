@@ -11,10 +11,12 @@ import frc.robot.subsystems.FeederSubsystem;
 public class StartFeeder extends Command {
   /** Creates a new StartFeeder. */
   private final FeederSubsystem feederSubsystem;
+  private final double feederRPS;
 
-  public StartFeeder(FeederSubsystem feederSubsystem) {
+  public StartFeeder(FeederSubsystem feederSubsystem, double feederRPS) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.feederSubsystem = feederSubsystem;
+    this.feederRPS = feederRPS;
     addRequirements(feederSubsystem);
   }
 
@@ -25,7 +27,7 @@ public class StartFeeder extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    feederSubsystem.start();
+    feederSubsystem.setFeeder(feederRPS);
   }
 
   // Called once the command ends or is interrupted.
