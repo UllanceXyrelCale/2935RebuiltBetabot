@@ -61,25 +61,26 @@ public final class Configs {
         }
     }
 
-    public static final class shootingMotor {
+        public static final class shootingMotor {
 
         // Create configuration class for our shooting motors
-        public static final TalonFXConfiguration shootingConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration shootingLeftConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration shootingRightConfig = new TalonFXConfiguration();
 
         static {
 
             // Coast or Brake
-            shootingConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+            shootingLeftConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
             // Current Limits
-            shootingConfig.CurrentLimits.SupplyCurrentLimit = 50;
-            shootingConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            shootingLeftConfig.CurrentLimits.SupplyCurrentLimit = 100;
+            shootingLeftConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
             // Invert Motor
-            shootingConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            shootingLeftConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
             // Gear Ratio
-            shootingConfig.Feedback.SensorToMechanismRatio = 1.0;
+            shootingLeftConfig.Feedback.SensorToMechanismRatio = 1.0;
 
             // PID VALUES
             // ONLY ADJUST THE P
@@ -87,15 +88,44 @@ public final class Configs {
             // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
             // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
 
-            shootingConfig.Slot0.kP = 0.1;
-            shootingConfig.Slot0.kI = 0.0;
-            shootingConfig.Slot0.kD = 0.0;
-            shootingConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+            shootingLeftConfig.Slot0.kP = 0.8;
+            shootingLeftConfig.Slot0.kI = 0.0;
+            shootingLeftConfig.Slot0.kD = 0.0;
+            shootingLeftConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
 
             // Voltage Control
 
-            shootingConfig.Voltage.PeakForwardVoltage = 12.0;
-            shootingConfig.Voltage.PeakReverseVoltage = -12.0;
+            shootingLeftConfig.Voltage.PeakForwardVoltage = 12.0;
+            shootingLeftConfig.Voltage.PeakReverseVoltage = -12.0;
+
+            // Coast or Brake
+            shootingRightConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+
+            // Current Limits
+            shootingRightConfig.CurrentLimits.SupplyCurrentLimit = 100;
+            shootingRightConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+            // Invert Motor
+            shootingRightConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+            // Gear Ratio
+            shootingRightConfig.Feedback.SensorToMechanismRatio = 1.0;
+
+            // PID VALUES
+            // ONLY ADJUST THE P
+            // IF YOU ADJUST GO IN VERY VERY SMALL INCREMENTS
+            // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
+            // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
+
+            shootingRightConfig.Slot0.kP = 0.8;
+            shootingRightConfig.Slot0.kI = 0.0;
+            shootingRightConfig.Slot0.kD = 0.0;
+            shootingRightConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+
+            // Voltage Control
+
+            shootingRightConfig.Voltage.PeakForwardVoltage = 12.0;
+            shootingRightConfig.Voltage.PeakReverseVoltage = -12.0;
 
         }
 

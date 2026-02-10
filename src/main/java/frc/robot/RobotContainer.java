@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SetShooterVelocity;
+import frc.robot.commands.ShootAndFeed;
 import frc.robot.commands.StartFeeder;
 import frc.robot.commands.StartFloor;
 import frc.robot.commands.StartIntake;
@@ -29,10 +31,10 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
-  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  private final FeederSubsystem m_feederSubsystem = new FeederSubsystem();
-  private final FloorSubsystem m_FloorSubsystem = new FloorSubsystem();
+  private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
+  private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
+  private final FeederSubsystem s_feederSubsystem = new FeederSubsystem();
+  private final FloorSubsystem s_floorSubsystem = new FloorSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -72,23 +74,25 @@ public class RobotContainer {
     //         () -> m_robotDrive.setX(),
     //         m_robotDrive));
 
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+        .whileTrue(new RunCommand(
+            () -> m_robotDrive.setX(),
+            m_robotDrive));
+
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-        .onTrue(new InstantCommand(
+        .whileTrue(new InstantCommand(
             () -> m_robotDrive.zeroHeading(),
             m_robotDrive));
 
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-      .whileTrue(new SetShooterVelocity(m_shooterSubsystem, 250));
+    new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)  // thresholdlimelight")
+      .whileTrue(
+          new ShootAndFeed(s_shooterSubsystem, 40, s_floorSubsystem, s_feederSubsystem)
+      );
 
-    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
-      .whileTrue(new StartIntake(m_intakeSubsystem));
-
-    new JoystickButton(m_driverController, XboxController.Button.kA.value)
-      .whileTrue(new StartFeeder(m_feederSubsystem));
-
-    new JoystickButton(m_driverController, XboxController.Button.kB.value)
-      .whileTrue(new StartFloor(m_FloorSubsystem));
-
+    new Trigger(() -> m_driverController.getLeftTriggerAxis() > 0.2)  // thresholdlimelight")
+      .whileTrue(
+          new StartIntake(s_intakeSubsystem)
+      );
   }
 
   /**
