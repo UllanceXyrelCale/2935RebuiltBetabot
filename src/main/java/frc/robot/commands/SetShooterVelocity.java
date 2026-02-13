@@ -11,12 +11,10 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class SetShooterVelocity extends Command {
   /** Creates a new SetShooterVelocity. */
   private final ShooterSubsystem shooterSubsystem;
-  private final double targetVelocity;
 
-  public SetShooterVelocity(ShooterSubsystem shooterSubsystem, double targetVelocity) {
+  public SetShooterVelocity(ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooterSubsystem = shooterSubsystem;
-    this.targetVelocity = targetVelocity;
     addRequirements(shooterSubsystem);
   }
 
@@ -27,7 +25,7 @@ public class SetShooterVelocity extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.setVelocity(targetVelocity); 
+    shooterSubsystem.setVelocity(); 
   }
 
   // Called once the command ends or is interrupted.

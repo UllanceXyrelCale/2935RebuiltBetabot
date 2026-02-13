@@ -88,7 +88,7 @@ public final class Configs {
             // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
             // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
 
-            shootingLeftConfig.Slot0.kP = 0.8;
+            shootingLeftConfig.Slot0.kP = 0.75;
             shootingLeftConfig.Slot0.kI = 0.0;
             shootingLeftConfig.Slot0.kD = 0.0;
             shootingLeftConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
@@ -117,7 +117,7 @@ public final class Configs {
             // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
             // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
 
-            shootingRightConfig.Slot0.kP = 0.8;
+            shootingRightConfig.Slot0.kP = 0.75;
             shootingRightConfig.Slot0.kI = 0.0;
             shootingRightConfig.Slot0.kD = 0.0;
             shootingRightConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;

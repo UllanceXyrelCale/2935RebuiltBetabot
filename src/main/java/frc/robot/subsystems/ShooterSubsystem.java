@@ -5,8 +5,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
+import frc.robot.utils.APTree;
 
 public class ShooterSubsystem extends SubsystemBase {
   private final TalonFX leftShooterMotor;
@@ -17,6 +19,14 @@ public class ShooterSubsystem extends SubsystemBase {
   private final Timer atSpeedTimer = new Timer();
   private static final double REQUIRED_TIME_AT_SPEED = 0.2; // seconds
 
+  private final APTree speedLookup = new APTree();
+  private final LimelightSubsystem limelight = new LimelightSubsystem();
+
+  private final double[][] shooterData = {
+    {1.47, 20},    
+    {0.85, 30},
+    {0.6, 40}  
+  };
 
   private double targetRPS = 0;
 
@@ -29,28 +39,31 @@ public class ShooterSubsystem extends SubsystemBase {
     leftShooterMotor.getConfigurator().apply(Configs.shootingMotor.shootingLeftConfig);
     rightShooterMotor.getConfigurator().apply(Configs.shootingMotor.shootingRightConfig);
 
-    // If needed:
-    // rightShooterMotor.setInverted(true);
+    // Insert the data into the tree
+    speedLookup.InsertValues(shooterData);
   }
 
-  /** Set both motors to ANY velocity (RPS) */
-  public void setVelocity(double rps) {
+  /** Set both motors based on distance to target */
+  public void setVelocity() {
+    double rps = speedLookup.GetValue(limelight.getTA());
     targetRPS = rps;
 
     leftShooterMotor.setControl(velocityRequest.withVelocity(rps));
     rightShooterMotor.setControl(velocityRequest.withVelocity(rps));
   }
 
-  /** Optional: allow independent wheel tuning */
-  public void setVelocity(double leftRPS, double rightRPS) {
-    targetRPS = leftRPS; // primary reference (for atTargetSpeed)
-
-    atSpeedTimer.stop();
-    atSpeedTimer.reset();
-
-    leftShooterMotor.setControl(velocityRequest.withVelocity(leftRPS));
-    rightShooterMotor.setControl(velocityRequest.withVelocity(rightRPS));
-  }
+public Command shoot() {
+  return startEnd(
+      () -> {
+        leftShooterMotor.setControl(velocityRequest.withVelocity(20));
+        rightShooterMotor.setControl(velocityRequest.withVelocity(20));
+      },
+      () -> {
+        leftShooterMotor.setControl(velocityRequest.withVelocity(0));
+        rightShooterMotor.setControl(velocityRequest.withVelocity(0));
+      }
+  );
+}
 
 
   /** Stop both motors */
@@ -72,22 +85,21 @@ public class ShooterSubsystem extends SubsystemBase {
 
   /** Both motors must be within tolerance of target */
   public boolean atTargetSpeed(double tolerance) {
-  boolean withinTolerance =
-      Math.abs(getLeftSpeed() - targetRPS) < tolerance &&
-      Math.abs(getRightSpeed() - targetRPS) < tolerance;
+    boolean withinTolerance =
+        Math.abs(getLeftSpeed() - targetRPS) < tolerance &&
+        Math.abs(getRightSpeed() - targetRPS) < tolerance;
 
-  if (withinTolerance) {
-    if (!atSpeedTimer.isRunning()) {
-      atSpeedTimer.restart(); // start counting once we first enter range
+    if (withinTolerance) {
+      if (!atSpeedTimer.isRunning()) {
+        atSpeedTimer.restart();
+      }
+    } else {
+      atSpeedTimer.stop();
+      atSpeedTimer.reset();
     }
-  } else {
-    atSpeedTimer.stop();
-    atSpeedTimer.reset();
+
+    return atSpeedTimer.hasElapsed(REQUIRED_TIME_AT_SPEED);
   }
-
-  return atSpeedTimer.hasElapsed(REQUIRED_TIME_AT_SPEED);
-}
-
 
   @Override
   public void periodic() {

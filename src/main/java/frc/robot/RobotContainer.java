@@ -86,12 +86,12 @@ public class RobotContainer {
 
     new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)  // thresholdlimelight")
       .whileTrue(
-          new ShootAndFeed(s_shooterSubsystem, 27.4, s_floorSubsystem, s_feederSubsystem)
+          new ShooterSubsystem().shoot()
       );
 
     new Trigger(() -> m_driverController.getLeftTriggerAxis() > 0.2)  // thresholdlimelight")
       .whileTrue(
-          new StartIntake(s_intakeSubsystem)
+          new ShootAndFeed(s_shooterSubsystem, s_floorSubsystem, s_feederSubsystem)
       );
   }
 

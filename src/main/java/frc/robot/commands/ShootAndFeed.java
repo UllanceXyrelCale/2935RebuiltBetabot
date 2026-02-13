@@ -10,19 +10,18 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class ShootAndFeed extends SequentialCommandGroup {  // Changed to Sequential!
   public ShootAndFeed(
       ShooterSubsystem shooter,
-      double shooterRPS,
       FloorSubsystem floor,
       FeederSubsystem feeder
   ) {
     addCommands(
       // Step 1: Spin up shooter and WAIT until at speed
-      new SetShooterVelocity(shooter, shooterRPS)
+      new SetShooterVelocity(shooter)
         .until(() -> shooter.atTargetSpeed(10)),
       
       // Step 2: Once at speed, run everything in parallel
       new ParallelCommandGroup(
         // Keep shooter running
-        new SetShooterVelocity(shooter, shooterRPS),
+        new SetShooterVelocity(shooter),
         
         // Pulse floor and feeder
         new SequentialCommandGroup(
