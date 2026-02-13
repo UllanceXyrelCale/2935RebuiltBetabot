@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -25,20 +26,21 @@ public class ShooterSubsystem extends SubsystemBase {
   private double targetRPS = 0;
 
   public ShooterSubsystem() {
-    leftShooterMotor = new TalonFX(52);
-    rightShooterMotor = new TalonFX(40);
+      leftShooterMotor = new TalonFX(52);
+      rightShooterMotor = new TalonFX(40);
 
-    velocityRequest = new VelocityVoltage(0).withSlot(0);
+      velocityRequest = new VelocityVoltage(0).withSlot(0);
 
-    // Apply the same configuration to both motors
-    leftShooterMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
-    rightShooterMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
-
-    // Set follower AFTER configurations are applied
-    // true = opposed direction (motors face each other)
-    rightShooterMotor.setControl(
-      new Follower(leftShooterMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-    );
+      // ONLY apply config to the LEADER
+      leftShooterMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
+      
+      // For follower: either apply minimal config or just factory default
+      rightShooterMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig); // Factory defaults
+      
+      // Now set follower relationship
+      rightShooterMotor.setControl(
+        new Follower(leftShooterMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+      );
   }
 
   /**

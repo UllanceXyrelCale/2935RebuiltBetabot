@@ -87,10 +87,10 @@ public final class Configs {
             // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
             // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
 
-            shooterConfig.Slot0.kP = 0.8;
+            shooterConfig.Slot0.kP = 0.2;
             shooterConfig.Slot0.kI = 0.0;
             shooterConfig.Slot0.kD = 0.0;
-            shooterConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+            shooterConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
 
@@ -128,7 +128,7 @@ public final class Configs {
             feederConfig.Slot0.kP = 0.1;
             feederConfig.Slot0.kI = 0.0;
             feederConfig.Slot0.kD = 0.0;
-            feederConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+            feederConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
 
@@ -157,7 +157,7 @@ public final class Configs {
             floorConfig.Slot0.kP = 0.1;
             floorConfig.Slot0.kI = 0.0;
             floorConfig.Slot0.kD = 0.0;
-            floorConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+            floorConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
 
@@ -196,7 +196,7 @@ public final class Configs {
             intakeConfig.Slot0.kP = 0.1;
             intakeConfig.Slot0.kI = 0.0;
             intakeConfig.Slot0.kD = 0.0;
-            intakeConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeed;
+            intakeConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
 

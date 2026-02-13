@@ -24,7 +24,7 @@ public class StartShooter extends Command {
 
   @Override
   public void execute() {
-    shooterSubsystem.setVelocity(limelightSubsystem.getShooterRPS()); 
+    shooterSubsystem.setVelocity(limelightSubsystem.getShooterRPS()); // Change the value to a double for testing 
   }
 
   @Override
