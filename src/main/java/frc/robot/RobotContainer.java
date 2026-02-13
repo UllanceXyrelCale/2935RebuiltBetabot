@@ -12,15 +12,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.SetShooterVelocity;
-import frc.robot.commands.ShootAndFeed;
-import frc.robot.commands.StartFeeder;
-import frc.robot.commands.StartFloor;
-import frc.robot.commands.StartIntake;
+import frc.robot.commands.StartShooter;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.FeederSubsystem;
-import frc.robot.subsystems.FloorSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -32,9 +26,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
-  private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
-  private final FeederSubsystem s_feederSubsystem = new FeederSubsystem();
-  private final FloorSubsystem s_floorSubsystem = new FloorSubsystem();
+  private final LimelightSubsystem s_limelightSubsystem = new LimelightSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -69,29 +61,20 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+
     // new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
     //     .whileTrue(new RunCommand(
     //         () -> m_robotDrive.setX(),
     //         m_robotDrive));
 
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
-
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
         .whileTrue(new InstantCommand(
             () -> m_robotDrive.zeroHeading(),
             m_robotDrive));
-
-    new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)  // thresholdlimelight")
+    
+    new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)  
       .whileTrue(
-          new ShooterSubsystem().shoot()
-      );
-
-    new Trigger(() -> m_driverController.getLeftTriggerAxis() > 0.2)  // thresholdlimelight")
-      .whileTrue(
-          new ShootAndFeed(s_shooterSubsystem, s_floorSubsystem, s_feederSubsystem)
+          new StartShooter(s_shooterSubsystem, s_limelightSubsystem)
       );
   }
 
