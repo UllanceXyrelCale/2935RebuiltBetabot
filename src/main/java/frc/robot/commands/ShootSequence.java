@@ -14,13 +14,13 @@ public class ShootSequence extends SequentialCommandGroup {  // Changed to Seque
   ) {
     addCommands(
       // Step 1: Spin up shooter and WAIT until at speed
-      new StartShooter(shooter, limelight)
+      new StartShooter(shooter, limelight.getShooterRPS())
         .until(() -> shooter.atTargetSpeed(2.0)),
       
       // Step 2: Once at speed, run everything in parallel
       new ParallelCommandGroup(
         // Keep shooter running
-        new StartShooter(shooter, limelight),
+        new StartShooter(shooter, limelight.getShooterRPS()),
         
         // Pulse floor and feeder
         new SequentialCommandGroup(

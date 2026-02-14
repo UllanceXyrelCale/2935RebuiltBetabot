@@ -5,18 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class StartShooter extends Command {
   private final ShooterSubsystem shooterSubsystem;
-  private final LimelightSubsystem limelightSubsystem;
+  private final double targetRPS;
 
-  public StartShooter(ShooterSubsystem shooterSubsystem, LimelightSubsystem limelightSubsystem) {
+  public StartShooter(ShooterSubsystem shooterSubsystem, double targetRPS) {
     this.shooterSubsystem = shooterSubsystem;
-    this.limelightSubsystem = limelightSubsystem;
+    this.targetRPS = targetRPS;
 
-    addRequirements(shooterSubsystem, limelightSubsystem);
+    addRequirements(shooterSubsystem);
   }
 
   @Override
@@ -24,7 +23,7 @@ public class StartShooter extends Command {
 
   @Override
   public void execute() {
-    shooterSubsystem.setVelocity(limelightSubsystem.getShooterRPS()); // Change the value to a double for testing 
+    shooterSubsystem.setVelocity(targetRPS);
   }
 
   @Override

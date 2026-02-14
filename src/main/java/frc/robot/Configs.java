@@ -21,8 +21,13 @@ public final class Configs {
             double drivingVelocityFeedForward = nominalVoltage / ModuleConstants.kDriveWheelFreeSpeedRps;
 
             drivingConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            
+            // Current Limits - ADDED STATOR LIMIT
             drivingConfig.CurrentLimits.SupplyCurrentLimit = 50;
             drivingConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            drivingConfig.CurrentLimits.StatorCurrentLimit = 70;  // NEW - swerve drive under load
+            drivingConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+            
             drivingConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
             drivingConfig.Feedback.SensorToMechanismRatio = ModuleConstants.kDrivingMotorReduction;
 
@@ -61,42 +66,61 @@ public final class Configs {
         }
     }
 
-        public static final class shooterMotor {
+    public static final class shooterMotor {
 
-        // Create configuration class for our shooter motors
-        public static final TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration leftShooterConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration rightShooterConfig = new TalonFXConfiguration();
 
         static {
-
-            // Coast or Brake
-            shooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+            // ========== LEFT SHOOTER CONFIG ==========
+            leftShooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
             // Current Limits
-            shooterConfig.CurrentLimits.SupplyCurrentLimit = 100;
-            shooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            leftShooterConfig.CurrentLimits.SupplyCurrentLimit = 60;
+            leftShooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            leftShooterConfig.CurrentLimits.StatorCurrentLimit = 80;  // Prevents overheating
+            leftShooterConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
-            shooterConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            leftShooterConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
             // Gear Ratio
-            shooterConfig.Feedback.SensorToMechanismRatio = 1.0;
+            leftShooterConfig.Feedback.SensorToMechanismRatio = 1.0;
 
             // PID VALUES
-            // ONLY ADJUST THE P
-            // IF YOU ADJUST GO IN VERY VERY SMALL INCREMENTS
-            // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
-            // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
-
-            shooterConfig.Slot0.kP = 0.2;
-            shooterConfig.Slot0.kI = 0.0;
-            shooterConfig.Slot0.kD = 0.0;
-            shooterConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeedRPS;
+            leftShooterConfig.Slot0.kP = 0.2;
+            leftShooterConfig.Slot0.kI = 0.0;
+            leftShooterConfig.Slot0.kD = 0.0;
+            leftShooterConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
+            leftShooterConfig.Voltage.PeakForwardVoltage = 12.0;
+            leftShooterConfig.Voltage.PeakReverseVoltage = -12.0;
 
-            shooterConfig.Voltage.PeakForwardVoltage = 12.0;
-            shooterConfig.Voltage.PeakReverseVoltage = -12.0;
+            // ========== RIGHT SHOOTER CONFIG ==========
+            rightShooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
+            // Current Limits
+            rightShooterConfig.CurrentLimits.SupplyCurrentLimit = 60;
+            rightShooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            rightShooterConfig.CurrentLimits.StatorCurrentLimit = 80;  // Prevents overheating
+            rightShooterConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+
+            // Invert Motor (opposite from left)
+            rightShooterConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+            // Gear Ratio
+            rightShooterConfig.Feedback.SensorToMechanismRatio = 1.0;
+
+            // PID VALUES
+            rightShooterConfig.Slot0.kP = 0.2;
+            rightShooterConfig.Slot0.kI = 0.0;
+            rightShooterConfig.Slot0.kD = 0.0;
+            rightShooterConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
+
+            // Voltage Control
+            rightShooterConfig.Voltage.PeakForwardVoltage = 12.0;
+            rightShooterConfig.Voltage.PeakReverseVoltage = -12.0;
         }
     }
 
@@ -105,13 +129,14 @@ public final class Configs {
         public static final TalonFXConfiguration feederConfig = new TalonFXConfiguration();
 
         static {
-
             // Coast or Brake
             feederConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-            // Current Limits
+            // Current Limits - ADDED STATOR LIMIT
             feederConfig.CurrentLimits.SupplyCurrentLimit = 50;
             feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            feederConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
+            feederConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
             feederConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -120,66 +145,58 @@ public final class Configs {
             feederConfig.Feedback.SensorToMechanismRatio = 1.0;
 
             // PID VALUES
-            // ONLY ADJUST THE P
-            // IF YOU ADJUST GO IN VERY VERY SMALL INCREMENTS
-            // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
-            // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
-
             feederConfig.Slot0.kP = 0.1;
             feederConfig.Slot0.kI = 0.0;
             feederConfig.Slot0.kD = 0.0;
-            feederConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeedRPS;
+            feederConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
-
             feederConfig.Voltage.PeakForwardVoltage = 12.0;
             feederConfig.Voltage.PeakReverseVoltage = -12.0;
-
         }
-        
     }
 
     public static final class floorMotor {
 
         public static final TalonFXConfiguration floorConfig = new TalonFXConfiguration();
+        
         static {
-
             floorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
+            // Current Limits - ADDED STATOR LIMIT
             floorConfig.CurrentLimits.SupplyCurrentLimit = 50;
             floorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            floorConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
+            floorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             floorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-
     
             floorConfig.Feedback.SensorToMechanismRatio = 1.0;
 
             floorConfig.Slot0.kP = 0.1;
             floorConfig.Slot0.kI = 0.0;
             floorConfig.Slot0.kD = 0.0;
-            floorConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeedRPS;
+            floorConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
-
             floorConfig.Voltage.PeakForwardVoltage = 12.0;
             floorConfig.Voltage.PeakReverseVoltage = -12.0;
-
         }
-
     }
 
-        public static final class intakeMotor {        
+    public static final class intakeMotor {        
         // Create configuration class for our intake motors
         public static final TalonFXConfiguration intakeConfig = new TalonFXConfiguration();
 
         static {
-
             // Coast or Brake
             intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-            // Current Limits
+            // Current Limits - ADDED STATOR LIMIT
             intakeConfig.CurrentLimits.SupplyCurrentLimit = 50;
             intakeConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            intakeConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
+            intakeConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
             intakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -188,18 +205,12 @@ public final class Configs {
             intakeConfig.Feedback.SensorToMechanismRatio = 1.0;
 
             // PID VALUES
-            // ONLY ADJUST THE P
-            // IF YOU ADJUST GO IN VERY VERY SMALL INCREMENTS
-            // FOR EXAMPLE 0.1 -> 0.2, THEN VERIFY IT DOESNT GO CRAZY
-            // IF THE MOTOR IS BOUNCING BETWEEN FORWARDS AND BACK, REDUCE P
-
             intakeConfig.Slot0.kP = 0.1;
             intakeConfig.Slot0.kI = 0.0;
             intakeConfig.Slot0.kD = 0.0;
-            intakeConfig.Slot0.kV = 12 / Constants.KrakenX60.kFreeSpeedRPS;
+            intakeConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
-
             intakeConfig.Voltage.PeakForwardVoltage = 12.0;
             intakeConfig.Voltage.PeakReverseVoltage = -12.0;
         }

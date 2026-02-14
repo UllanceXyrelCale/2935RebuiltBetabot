@@ -35,8 +35,8 @@ public class AimToTag extends Command {
 
   private static final double kAngleTolerance = 2.0;  // degrees
 
-@Override
-public void execute() {
+  @Override
+  public void execute() {
     if (!limelightSubsystem.hasValidTarget()) {
         return;
     }
@@ -44,7 +44,7 @@ public void execute() {
     double tx = limelightSubsystem.getTX();
     if (Math.abs(tx) <= VisionConstants.kAngleTolerance) {
     return;
-}
+  }
 
     // Don't turn if already close enough!
     if (Math.abs(tx) <= kAngleTolerance) {
@@ -56,7 +56,7 @@ public void execute() {
     
     turnCommand = new TurnToAngle(driveSubsystem, targetAngle);
     turnCommand.schedule();
-}
+  }
   
   @Override
   public boolean isFinished() {
