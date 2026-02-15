@@ -2,14 +2,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.FloorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootSequence extends SequentialCommandGroup {  // Changed to Sequential!
   public ShootSequence(
       ShooterSubsystem shooter,
-      IndexerSubsystem indexer,
+      FeederSubsystem feeder,
+      FloorSubsystem floor,
       LimelightSubsystem limelight
   ) {
     addCommands(
@@ -24,8 +26,15 @@ public class ShootSequence extends SequentialCommandGroup {  // Changed to Seque
         
         // Pulse floor and feeder
         new SequentialCommandGroup(
-          new StartIndexer(indexer, 20).withTimeout(.25),
-          new StartIndexer(indexer, 0).withTimeout(0.10)
+          new ParallelCommandGroup(
+            new StartFloor(floor, 15),
+            new StartFeeder(feeder, 20)
+          ),
+
+          new ParallelCommandGroup(
+            new StartFloor(floor, 0),
+            new StartFeeder(feeder, 0)
+          )
         ).repeatedly()
       )
     );

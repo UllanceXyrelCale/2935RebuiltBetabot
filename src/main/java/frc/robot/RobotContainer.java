@@ -14,10 +14,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AimToTag;
 import frc.robot.commands.ShootSequence;
-import frc.robot.commands.StartIndexer;
+import frc.robot.commands.StartFeeder;
+import frc.robot.commands.StartFloor;
 import frc.robot.commands.StartShooter;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.FloorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 /*
@@ -30,7 +32,8 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
-  private final IndexerSubsystem s_indexerSubsystem = new IndexerSubsystem();
+  private final FloorSubsystem s_floorSubsystem = new FloorSubsystem();
+  private final FeederSubsystem s_feederSubsystem = new FeederSubsystem();
   private final LimelightSubsystem s_limelightSubsystem = new LimelightSubsystem();
 
   // The driver's controller
@@ -67,17 +70,28 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    new JoystickButton(m_driverController, XboxController.Button.kY.value)
+    // Test Joystick Commands
+    new JoystickButton(m_driverController, XboxController.Button.kX.value)
         .whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
 
-    new JoystickButton(m_driverController, XboxController.Button.kX.value)
+    new JoystickButton(m_driverController, XboxController.Button.kY.value)
         .whileTrue(new AimToTag(m_robotDrive, s_limelightSubsystem));
 
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
+        .whileTrue(new StartFloor(s_floorSubsystem, 15));
+
+    new JoystickButton(m_driverController, XboxController.Button.kB.value)
+        .whileTrue(new StartFeeder(s_feederSubsystem, 20));
+
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+        .whileTrue(new StartShooter(s_shooterSubsystem, 25));
+
+    // Final Joystick Commands
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
         .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
     new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)  
-      .whileTrue(new ShootSequence(s_shooterSubsystem, s_indexerSubsystem, s_limelightSubsystem));
+      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, s_limelightSubsystem));
   }
 
   /**

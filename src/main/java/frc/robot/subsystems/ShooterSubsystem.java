@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -13,13 +12,11 @@ import frc.robot.Configs;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  // Left and right leader motors - all PID and velocity commands go here
-  private final TalonFX leftLeaderMotor;
-  private final TalonFX rightLeaderMotor;
-  
-  // Left and right follower motors - mirrors the leader with opposite direction
-  private final TalonFX leftFollowerMotor;
-  private final TalonFX rightFollowerMotor;
+  // Intialize motors and make top left motor as leader
+  private final TalonFX topLeftMotor;
+  private final TalonFX bottomLeftMotor;
+  private final TalonFX topRightMotor;
+  private final TalonFX bottomRightMotor;
 
   private final VelocityVoltage velocityRequest;
 
@@ -29,25 +26,29 @@ public class ShooterSubsystem extends SubsystemBase {
   private double targetRPS = 0;
 
   public ShooterSubsystem() {
-      leftLeaderMotor = new TalonFX(52);
-      leftFollowerMotor = new TalonFX(40);
-      rightLeaderMotor = new TalonFX(0);
-      rightFollowerMotor = new TalonFX(0);
+      topLeftMotor = new TalonFX(40);
+      bottomLeftMotor = new TalonFX(41);
+      topRightMotor = new TalonFX(42);
+      bottomRightMotor = new TalonFX(43);
 
       velocityRequest = new VelocityVoltage(0).withSlot(0);
 
-      leftLeaderMotor.getConfigurator().apply(Configs.shooterMotor.leftShooterConfig);
-      leftFollowerMotor.getConfigurator().apply(Configs.shooterMotor.leftShooterConfig); 
-      rightLeaderMotor.getConfigurator().apply(Configs.shooterMotor.rightShooterConfig);
-      rightFollowerMotor.getConfigurator().apply(Configs.shooterMotor.rightShooterConfig);
+      topLeftMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
+      bottomLeftMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig); 
+      topRightMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
+      bottomRightMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
 
       // Set follower relationship
-      leftFollowerMotor.setControl(
-        new Follower(leftLeaderMotor.getDeviceID(), MotorAlignmentValue.Aligned)
+      bottomLeftMotor.setControl(
+        new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Aligned)
       );
 
-      rightFollowerMotor.setControl(
-        new Follower(rightLeaderMotor.getDeviceID(), MotorAlignmentValue.Aligned)
+      topRightMotor.setControl(
+        new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+      );
+
+      bottomRightMotor.setControl(
+        new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Opposed)
       );
   }
 
@@ -57,8 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
    */
   public void setVelocity(double rps) {
     targetRPS = rps;
-    leftLeaderMotor.setControl(velocityRequest.withVelocity(rps));
-    rightLeaderMotor.setControl(velocityRequest.withVelocity(rps));
+    topLeftMotor.setControl(velocityRequest.withVelocity(rps));
   }
 
   /** Stop both pair of motors */
@@ -67,19 +67,14 @@ public class ShooterSubsystem extends SubsystemBase {
     atSpeedTimer.stop();
     atSpeedTimer.reset();
     
-    leftLeaderMotor.stopMotor();
-    rightLeaderMotor.stopMotor();
+    topLeftMotor.stopMotor();
   }
 
   /** Get left (leader) motor velocity in RPS */
-  public double getLeftSpeed() {
-    return leftLeaderMotor.getVelocity().getValueAsDouble();
+  public double getShooterSpeed() {
+    return topLeftMotor.getVelocity().getValueAsDouble();
   }
 
-  /** Get right (leader) motor velocity in RPS */
-  public double getRightSpeed() {
-    return rightLeaderMotor.getVelocity().getValueAsDouble();
-  }
 
   /**
    * Check if shooter is at target speed for required duration
@@ -88,7 +83,7 @@ public class ShooterSubsystem extends SubsystemBase {
    */
   public boolean atTargetSpeed(double tolerance) {
     // Only check leader motor since follower mirrors it
-    boolean withinTolerance = (Math.abs(getLeftSpeed() - targetRPS) < tolerance) && (Math.abs(getRightSpeed() - targetRPS) < tolerance);
+    boolean withinTolerance = (Math.abs(getShooterSpeed() - targetRPS) < tolerance);
 
     if (withinTolerance) {
       if (!atSpeedTimer.isRunning()) {
@@ -110,8 +105,10 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shooter/Target RPS", targetRPS);
-    SmartDashboard.putNumber("Shooter/Left RPS", getLeftSpeed());
-    SmartDashboard.putNumber("Shooter/Right RPS", getRightSpeed());
+    SmartDashboard.putNumber("Shooter/Top Left RPS", getShooterSpeed());
+    SmartDashboard.putNumber("Shooter/Bottom Left RPS", bottomLeftMotor.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Shooter/Top Right RPS", topRightMotor.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Shooter/Bottom Right RPS", bottomRightMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter/At Speed", atTargetSpeed(2.0)); // Example tolerance
   }
 }

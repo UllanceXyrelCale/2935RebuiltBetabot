@@ -68,59 +68,33 @@ public final class Configs {
 
     public static final class shooterMotor {
 
-        public static final TalonFXConfiguration leftShooterConfig = new TalonFXConfiguration();
-        public static final TalonFXConfiguration rightShooterConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
 
         static {
             // ========== LEFT SHOOTER CONFIG ==========
-            leftShooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+            shooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
             // Current Limits
-            leftShooterConfig.CurrentLimits.SupplyCurrentLimit = 60;
-            leftShooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-            leftShooterConfig.CurrentLimits.StatorCurrentLimit = 80;  // Prevents overheating
-            leftShooterConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+            shooterConfig.CurrentLimits.SupplyCurrentLimit = 60;
+            shooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            shooterConfig.CurrentLimits.StatorCurrentLimit = 80;  // Prevents overheating
+            shooterConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
-            leftShooterConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            shooterConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
             // Gear Ratio
-            leftShooterConfig.Feedback.SensorToMechanismRatio = 1.0;
+            shooterConfig.Feedback.SensorToMechanismRatio = 1.0;
 
             // PID VALUES
-            leftShooterConfig.Slot0.kP = 0.2;
-            leftShooterConfig.Slot0.kI = 0.0;
-            leftShooterConfig.Slot0.kD = 0.0;
-            leftShooterConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
+            shooterConfig.Slot0.kP = 0.2;
+            shooterConfig.Slot0.kI = 0.0;
+            shooterConfig.Slot0.kD = 0.0;
+            shooterConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
-            leftShooterConfig.Voltage.PeakForwardVoltage = 12.0;
-            leftShooterConfig.Voltage.PeakReverseVoltage = -12.0;
-
-            // ========== RIGHT SHOOTER CONFIG ==========
-            rightShooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-
-            // Current Limits
-            rightShooterConfig.CurrentLimits.SupplyCurrentLimit = 60;
-            rightShooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-            rightShooterConfig.CurrentLimits.StatorCurrentLimit = 80;  // Prevents overheating
-            rightShooterConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-
-            // Invert Motor (opposite from left)
-            rightShooterConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-
-            // Gear Ratio
-            rightShooterConfig.Feedback.SensorToMechanismRatio = 1.0;
-
-            // PID VALUES
-            rightShooterConfig.Slot0.kP = 0.2;
-            rightShooterConfig.Slot0.kI = 0.0;
-            rightShooterConfig.Slot0.kD = 0.0;
-            rightShooterConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
-
-            // Voltage Control
-            rightShooterConfig.Voltage.PeakForwardVoltage = 12.0;
-            rightShooterConfig.Voltage.PeakReverseVoltage = -12.0;
+            shooterConfig.Voltage.PeakForwardVoltage = 12.0;
+            shooterConfig.Voltage.PeakReverseVoltage = -12.0;
         }
     }
 

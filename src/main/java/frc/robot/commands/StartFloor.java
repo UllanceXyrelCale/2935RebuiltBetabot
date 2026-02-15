@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.FloorSubsystem;
 
-public class StartIndexer extends Command {
-  public final IndexerSubsystem indexerSubsystem;
-  public final double indexerTargetRPS;
+public class StartFloor extends Command {
+  public final FloorSubsystem floorSubsystem;
+  public final double floorTargetRPS;
 
-  public StartIndexer(IndexerSubsystem indexerSubsystem, double indexerTargetRPS) {
-    this.indexerSubsystem = indexerSubsystem;
-    this.indexerTargetRPS = indexerTargetRPS;
+  public StartFloor(FloorSubsystem floorSubsystem, double floorTargetRPS) {
+    this.floorSubsystem = floorSubsystem;
+    this.floorTargetRPS = floorTargetRPS;
   }
 
   @Override
@@ -21,12 +21,12 @@ public class StartIndexer extends Command {
 
   @Override
   public void execute() {
-    indexerSubsystem.setIndexer(indexerTargetRPS);
+    floorSubsystem.setVelocity(floorTargetRPS);
   }
 
   @Override
   public void end(boolean interrupted) {
-    indexerSubsystem.stopIndexer();
+    floorSubsystem.stop();
   }
 
   @Override
