@@ -78,20 +78,20 @@ public class RobotContainer {
         .whileTrue(new AimToTag(m_robotDrive, s_limelightSubsystem));
 
     new JoystickButton(m_driverController, XboxController.Button.kA.value)
-        .whileTrue(new StartFloor(s_floorSubsystem, 15));
+        .whileTrue(new StartFloor(s_floorSubsystem, 30));
 
     new JoystickButton(m_driverController, XboxController.Button.kB.value)
-        .whileTrue(new StartFeeder(s_feederSubsystem, 20));
+        .whileTrue(new StartFeeder(s_feederSubsystem, 40));
 
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-        .whileTrue(new StartShooter(s_shooterSubsystem, 25));
+        .whileTrue(new StartShooter(s_shooterSubsystem, 10));
 
     // Final Joystick Commands
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
         .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
     new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)  
-      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, s_limelightSubsystem));
+      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem));
   }
 
   /**

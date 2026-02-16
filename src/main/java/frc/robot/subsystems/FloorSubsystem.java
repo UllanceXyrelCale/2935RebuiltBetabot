@@ -26,7 +26,7 @@ public class FloorSubsystem extends SubsystemBase {
     bottomFloorMotor.getConfigurator().apply(Configs.floorMotor.floorConfig);
     
     bottomFloorMotor.setControl(   
-      new Follower(topFloorMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+      new Follower(topFloorMotor.getDeviceID(), MotorAlignmentValue.Aligned)
     );
   }
 

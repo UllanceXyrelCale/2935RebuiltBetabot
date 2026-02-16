@@ -81,7 +81,7 @@ public final class Configs {
             shooterConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
-            shooterConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            shooterConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
             // Gear Ratio
             shooterConfig.Feedback.SensorToMechanismRatio = 1.0;
@@ -143,7 +143,7 @@ public final class Configs {
             floorConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
             floorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-            floorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+            floorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     
             floorConfig.Feedback.SensorToMechanismRatio = 1.0;
 
