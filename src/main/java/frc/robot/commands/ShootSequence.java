@@ -9,7 +9,7 @@ import frc.robot.subsystems.FloorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShootSequence extends ParallelCommandGroup {  // Changed to Sequential!
+public class ShootSequence extends ParallelCommandGroup {
   public ShootSequence(
       ShooterSubsystem shooter,
       FeederSubsystem feeder,
@@ -31,21 +31,13 @@ public class ShootSequence extends ParallelCommandGroup {  // Changed to Sequent
         // Keep shooter running
         new StartShooter(shooter,25),
 
-        // Pulse floor and feeder
-        new SequentialCommandGroup(
+        // Run floor and feeder
           new ParallelCommandGroup(
             new StartFloor(floor, 30),
             new StartFeeder(feeder, 40)
-          ),
-
-          new ParallelCommandGroup(
-            new StartFloor(floor, 0),
-            new StartFeeder(feeder, 0)
           )
-        ).repeatedly()
+        )
       )
-    )
-
     );
   }
 }

@@ -152,7 +152,7 @@ public final class Configs {
             floorConfig.Slot0.kD = 0.0;
             floorConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
 
-            // Voltage Control
+            // Voltage Control  
             floorConfig.Voltage.PeakForwardVoltage = 12.0;
             floorConfig.Voltage.PeakReverseVoltage = -12.0;
         }
