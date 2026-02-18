@@ -2,25 +2,28 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.utils.APPID;
 import frc.robot.utils.Calculations;
 import frc.robot.utils.Pose;
 
 public class TurnToAngle extends Command {
   private final DriveSubsystem driveSubsystem;
+  private final LimelightSubsystem limelightSubsystem; // null if hardcoded
   private final APPID turnPID;
 
-  private final double targetAngleDeg;     // desired heading, degrees
-  private final double angleToleranceDeg;  // finish tolerance, degrees
+  private double targetAngleDeg;           // not final anymore — limelight updates it each loop
+  private final double angleToleranceDeg;
 
-  // Tune these like you did in DriveToPoint (start with just P)
   private static final double kTurnP = 0.02;
   private static final double kTurnI = 0.0;
   private static final double kTurnD = 0.0;
-  private static final double kMaxRot = 0.25; // normalized [-1..1]
+  private static final double kMaxRot = 0.25;
 
+  // Hardcoded angle
   public TurnToAngle(DriveSubsystem driveSubsystem, double targetAngleDeg, double angleToleranceDeg) {
     this.driveSubsystem = driveSubsystem;
+    this.limelightSubsystem = null;
     this.targetAngleDeg = targetAngleDeg;
     this.angleToleranceDeg = angleToleranceDeg;
 
@@ -34,6 +37,23 @@ public class TurnToAngle extends Command {
     this(driveSubsystem, targetAngleDeg, 2.0);
   }
 
+  // Limelight mode — dynamically tracks tx each loop
+  public TurnToAngle(DriveSubsystem driveSubsystem, LimelightSubsystem limelightSubsystem, double angleToleranceDeg) {
+    this.driveSubsystem = driveSubsystem;
+    this.limelightSubsystem = limelightSubsystem;
+    this.targetAngleDeg = 0; // updated dynamically in execute()
+    this.angleToleranceDeg = angleToleranceDeg;
+
+    this.turnPID = new APPID(kTurnP, kTurnI, kTurnD, angleToleranceDeg);
+    this.turnPID.setMaxOutput(kMaxRot);
+
+    addRequirements(driveSubsystem); // limelight not required, just reading it
+  }
+
+  public TurnToAngle(DriveSubsystem driveSubsystem, LimelightSubsystem limelightSubsystem) {
+    this(driveSubsystem, limelightSubsystem, 2.0);
+  }
+
   @Override
   public void initialize() {
     turnPID.reset();
@@ -41,20 +61,22 @@ public class TurnToAngle extends Command {
 
   @Override
   public void execute() {
-    // Your odometry pose returns angle normalized to [0, 360) :contentReference[oaicite:1]{index=1}
-    Pose currentPose = driveSubsystem.getPose();
+    // Update target angle from limelight if in limelight mode
+    if (limelightSubsystem != null) {
+      if (!limelightSubsystem.hasValidTarget()) {
+        driveSubsystem.drive(0, 0, 0, true);
+        return;
+      }
+      targetAngleDeg = driveSubsystem.getHeading() - limelightSubsystem.getTX();
+    }
 
+    Pose currentPose = driveSubsystem.getPose();
     double currentAngle = Calculations.normalizeAngle360(currentPose.getAngle());
     double targetAngle  = Calculations.normalizeAngle360(targetAngleDeg);
+    double angleError   = Calculations.shortestAngularDistance(targetAngle, currentAngle);
 
-    // Signed shortest path error in [-180, 180] :contentReference[oaicite:2]{index=2}
-    double angleError = Calculations.shortestAngularDistance(targetAngle, currentAngle);
-
-    // Same sign convention you used in DriveToPoint :contentReference[oaicite:3]{index=3}
     turnPID.setDesiredValue(0);
     double rotCmd = turnPID.calculate(-angleError);
-
-    // Turn in place: no translation
     driveSubsystem.drive(0.0, 0.0, rotCmd, true);
   }
 
@@ -65,12 +87,13 @@ public class TurnToAngle extends Command {
 
   @Override
   public boolean isFinished() {
-    Pose currentPose = driveSubsystem.getPose();
+    // End immediately if limelight mode and target is lost
+    if (limelightSubsystem != null && !limelightSubsystem.hasValidTarget()) return true;
 
+    Pose currentPose = driveSubsystem.getPose();
     double currentAngle = Calculations.normalizeAngle360(currentPose.getAngle());
     double targetAngle  = Calculations.normalizeAngle360(targetAngleDeg);
-
-    double angleError = Math.abs(Calculations.shortestAngularDistance(targetAngle, currentAngle));
+    double angleError   = Math.abs(Calculations.shortestAngularDistance(targetAngle, currentAngle));
     return angleError <= angleToleranceDeg;
   }
 }

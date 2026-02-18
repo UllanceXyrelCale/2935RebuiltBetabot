@@ -29,7 +29,7 @@ public class ShootSequence extends ParallelCommandGroup {
       // Step 3: Once at speed, run everything in parallel
       new ParallelCommandGroup(
         // Keep shooter running
-        new StartShooter(shooter,25),
+        new StartShooter(shooter, 25),
 
         // Run floor and feeder
           new ParallelCommandGroup(

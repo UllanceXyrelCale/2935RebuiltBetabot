@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.APTree;
 
 public class LimelightSubsystem extends SubsystemBase {
@@ -30,8 +31,21 @@ public class LimelightSubsystem extends SubsystemBase {
   ///////////////////////////////////////////////////////////
   //            Data Used for Other Subsystems             //
   ///////////////////////////////////////////////////////////
-  public double getShooterRPS () {
+  public double getShooterRPS() {
     return speedLookup.GetValue(getTA());
+  }
+
+  public double getTurnAngle() {
+
+    if (hasValidTarget()) {
+      return 0;
+    }
+
+    if (Math.abs(getTX()) <= VisionConstants.kAngleTolerance) {
+      return 0;
+    }
+
+    return getTX();
   }
 
   ///////////////////////////////////////////////////////////

@@ -13,6 +13,7 @@ import frc.robot.commands.ShootSequence;
 import frc.robot.commands.StartFeeder;
 import frc.robot.commands.StartFloor;
 import frc.robot.commands.StartShooter;
+import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FloorSubsystem;
@@ -71,7 +72,10 @@ public class RobotContainer {
         .whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
 
     new JoystickButton(m_driverController, XboxController.Button.kY.value)
-        .whileTrue(new AimToTag(m_robotDrive, s_limelightSubsystem));
+        .whileTrue(new TurnToAngle(m_robotDrive, s_limelightSubsystem)); // uses limelight to turn to angle
+
+    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
+        .whileTrue(new TurnToAngle(m_robotDrive, 10)); // hardcoded value
 
     new JoystickButton(m_driverController, XboxController.Button.kA.value)
         .whileTrue(new StartFloor(s_floorSubsystem, 30));
@@ -80,7 +84,7 @@ public class RobotContainer {
         .whileTrue(new StartFeeder(s_feederSubsystem, 40));
 
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-        .whileTrue(new StartShooter(s_shooterSubsystem, 10));
+        .whileTrue(new StartShooter(s_shooterSubsystem, s_limelightSubsystem)); // takes data from the table for the velocity - change constructor for hard coded value
 
     // Final Joystick Commands
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
