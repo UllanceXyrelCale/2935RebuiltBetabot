@@ -5,10 +5,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AimToTag;
+import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.ShootSequence;
 import frc.robot.commands.StartFeeder;
 import frc.robot.commands.StartFloor;
@@ -101,6 +104,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return null;
+    // return new SequentialCommandGroup(
+    //     new DriveToPoint(m_robotDrive, 3, 3, 270),
+    //     new WaitCommand(1),
+    //     new DriveToPoint(m_robotDrive, 0, 0, 270),
+    //     new TurnToAngle(m_robotDrive, s_limelightSubsystem),
+    //     new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem)
+    // );
   }
 
 public DriveSubsystem getDriveSubsystem() {

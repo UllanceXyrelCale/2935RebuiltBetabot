@@ -113,7 +113,7 @@ public final class Configs {
             feederConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
-            feederConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+            feederConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
             // Gear Ratio
             feederConfig.Feedback.SensorToMechanismRatio = 1.0;
@@ -143,7 +143,7 @@ public final class Configs {
             floorConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
             floorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-            floorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            floorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     
             floorConfig.Feedback.SensorToMechanismRatio = 1.0;
 
