@@ -87,7 +87,7 @@ public class RobotContainer {
         .whileTrue(new StartFeeder(s_feederSubsystem, 40));
 
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-        .whileTrue(new StartShooter(s_shooterSubsystem, s_limelightSubsystem)); // takes data from the table for the velocity - change constructor for hard coded value
+        .whileTrue(new StartShooter(s_shooterSubsystem, 30)); // takes data from the table for the velocity - change constructor for hard coded value
 
     // Final Joystick Commands
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)

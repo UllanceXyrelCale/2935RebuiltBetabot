@@ -15,24 +15,32 @@ import frc.robot.utils.APTree;
 public class LimelightSubsystem extends SubsystemBase {
   /** Creates a new LimelightSubsystem. */
   private static NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight-aptag");
-  private static APTree speedLookup = new APTree();
+  private APTree distanceLookup = new APTree();
+  private APTree speedLookup = new APTree();
 
   // Creates a table for the different velocities from different distances
-  private double [][] shooterData = {
-    {1.47, 20},    
-    {0.85, 30},
-    {0.6, 40},  
+  public static final double [][] DISTANCE_DATA = {
+    {20.0, 0.864}, // {tY, Distance} 
   };
 
+  public static final double SPEED_DATA[][] = {
+    {}, // {Distance, Velocity}
+  }; 
+
   public LimelightSubsystem() {
-    speedLookup.InsertValues(shooterData);
+    distanceLookup.InsertValues(DISTANCE_DATA);
+    speedLookup.InsertValues(SPEED_DATA);
   }
 
   ///////////////////////////////////////////////////////////
   //            Data Used for Other Subsystems             //
   ///////////////////////////////////////////////////////////
+  public double getTagDistance() {
+    return distanceLookup.GetValue(getTY());
+  }
+
   public double getShooterRPS() {
-    return speedLookup.GetValue(getTA());
+    return speedLookup.GetValue(getTagDistance());
   }
 
   public double getTurnAngle() {
