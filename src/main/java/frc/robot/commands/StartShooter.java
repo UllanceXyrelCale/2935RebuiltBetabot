@@ -8,6 +8,7 @@ public class StartShooter extends Command {
   private final ShooterSubsystem shooterSubsystem;
   private final LimelightSubsystem limelightSubsystem; // null if hardcoded
   private final double targetRPS; // ignored if using limelight
+  private double limeRPS;
 
   // Hardcoded RPS
   public StartShooter(ShooterSubsystem shooterSubsystem, double targetRPS) {
@@ -28,12 +29,16 @@ public class StartShooter extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    if (limelightSubsystem != null) {
+      limeRPS = limelightSubsystem.getShooterRPS();
+    }
+  }
 
   @Override
   public void execute() {
     if (limelightSubsystem != null) {
-      shooterSubsystem.setVelocity(limelightSubsystem.getShooterRPS());
+      shooterSubsystem.setVelocity(limeRPS);
     } else {
       shooterSubsystem.setVelocity(targetRPS);
     }

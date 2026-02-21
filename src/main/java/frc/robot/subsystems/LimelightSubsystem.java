@@ -15,17 +15,27 @@ import frc.robot.utils.APTree;
 public class LimelightSubsystem extends SubsystemBase {
   /** Creates a new LimelightSubsystem. */
   private static NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight-aptag");
-  private APTree distanceLookup = new APTree();
-  private APTree speedLookup = new APTree();
+  private static APTree distanceLookup = new APTree();
+  private static APTree speedLookup = new APTree();
 
   // Creates a table for the different velocities from different distances
-  public static final double [][] DISTANCE_DATA = {
-    {20.0, 0.864}, // {tY, Distance} 
+  private static final double [][] DISTANCE_DATA = {
+    {21.10, 0.93}, // {tY, Distance}
+    {14.81, 1.133}, 
+    {11.56, 1.59},
+    {8.65, 1.85},
+    {5.84, 2.157},
+    {4.29, 2.357},
   };
 
-  public static final double SPEED_DATA[][] = {
-    {}, // {Distance, Velocity}
-  }; 
+  private static final double SPEED_DATA[][] = {
+    {0.93, 56.7},// {Distance, Velocity} 
+    {1.133, 57}, 
+    {1.59, 57.5},
+    {1.85, 59.1},
+    {2.157, 60},
+    {2.357, 62.7},
+  };
 
   public LimelightSubsystem() {
     distanceLookup.InsertValues(DISTANCE_DATA);
@@ -85,6 +95,11 @@ public class LimelightSubsystem extends SubsystemBase {
 
   public double getTY() {
     return getDoubleEntry("ty");
+  }
+
+  public boolean isTagAllowedForRotation() {
+    int id = (int) Math.round(getTID());
+    return id == 2 || id == 5 || id == 10;
   }
 
   @Override

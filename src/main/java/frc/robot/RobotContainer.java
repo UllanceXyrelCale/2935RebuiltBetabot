@@ -1,8 +1,11 @@
 package frc.robot;
 
+import java.util.Set;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -74,9 +77,6 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
         .whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
 
-    new JoystickButton(m_driverController, XboxController.Button.kY.value)
-        .whileTrue(new TurnToAngle(m_robotDrive, s_limelightSubsystem)); // uses limelight to turn to angle
-
     new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
         .whileTrue(new TurnToAngle(m_robotDrive, 10)); // hardcoded value
 
@@ -112,6 +112,29 @@ public class RobotContainer {
     //     new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem)
     // );
   }
+
+//     public Command aimToAllowedTagOnce() {
+//     return Commands.defer(
+//         () -> {
+//           // Gate: must see a target and it must be an allowed tag
+//           if (!s_limelightSubsystem.hasValidTarget() || !s_limelightSubsystem.isTagAllowedForRotation()) {
+//             return Commands.none();
+//           }
+
+//           double txDeg = s_limelightSubsystem.getTX();
+
+//           // Use continuous heading for control math (not the wrapped [0..360) one)
+//           double currentYawDeg = m_robotDrive.getPoseContinuous().getAngle();
+
+//           // Typical mapping: targetYaw = currentYaw - tx
+//           // If it turns the wrong way on your robot, flip the sign to +tx.
+//           double targetYawDeg = currentYawDeg - txDeg;
+
+//           return new TurnToAngle(m_robotDrive, targetYawDeg);
+//         },
+//         Set.of(m_robotDrive) // requirements for the *returned* command
+//     );
+//   }
 
 public DriveSubsystem getDriveSubsystem() {
     return m_robotDrive;
