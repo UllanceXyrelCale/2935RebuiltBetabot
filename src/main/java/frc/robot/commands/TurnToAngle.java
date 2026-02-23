@@ -15,7 +15,8 @@ public class TurnToAngle extends Command {
   private double targetAngleDeg;           // not final anymore — limelight updates it each loop
   private final double angleToleranceDeg;
 
-  private static final double kTurnP = 0.03;
+  private static final double kTurnP = 0.03
+  ;
   private static final double kTurnI = 0.0;
   private static final double kTurnD = 0.0;
   private static final double kMaxRot = 0.25;

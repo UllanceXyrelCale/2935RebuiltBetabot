@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AimToTag;
 import frc.robot.commands.DriveToPoint;
+import frc.robot.commands.ResetPose;
 import frc.robot.commands.ShootSequence;
 import frc.robot.commands.StartFeeder;
 import frc.robot.commands.StartFloor;
@@ -72,30 +73,20 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-
-    // Test Joystick Commands
-    new JoystickButton(m_driverController, XboxController.Button.kX.value)
-        .whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
-
-    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
-        .whileTrue(new TurnToAngle(m_robotDrive, 10)); // hardcoded value
-
-    new JoystickButton(m_driverController, XboxController.Button.kA.value)
-        .whileTrue(new StartFloor(s_floorSubsystem, 30));
-
-    new JoystickButton(m_driverController, XboxController.Button.kB.value)
-        .whileTrue(new StartFeeder(s_feederSubsystem, 40));
-
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-        .whileTrue(new StartShooter(s_shooterSubsystem, 30)); // takes data from the table for the velocity - change constructor for hard coded value
-
     // Final Joystick Commands
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
         .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
-    new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)  
-      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem));
-  }
+    // Reset pose
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
+      .whileTrue(new SequentialCommandGroup(
+        new WaitCommand(5),
+        new ResetPose(m_robotDrive, s_limelightSubsystem),
+        new DriveToPoint(m_robotDrive, -1.32, 0.1796, 0),
+        new WaitCommand(5),
+        new ResetPose(m_robotDrive, s_limelightSubsystem)
+      ));
+    }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

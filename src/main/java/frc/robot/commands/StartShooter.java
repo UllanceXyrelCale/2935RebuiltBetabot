@@ -31,7 +31,7 @@ public class StartShooter extends Command {
   @Override
   public void initialize() {
     if (limelightSubsystem != null) {
-      limeRPS = limelightSubsystem.getShooterRPS();
+      limeRPS = limelightSubsystem.getShooterRPS(10);
     }
   }
 
