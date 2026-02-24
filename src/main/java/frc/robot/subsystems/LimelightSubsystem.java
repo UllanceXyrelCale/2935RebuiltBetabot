@@ -33,12 +33,12 @@ public class LimelightSubsystem extends SubsystemBase {
   };
 
   private static final double[][] T2_DISTANCE_DATA = {
-    {21.10, 10.34},
-    {14.81, 10.567},
-    {11.56, 10.867},
-    {8.65,  11.5},
-    {5.84,  12.34},
-    {4.29,  12.8},
+    {21.10, 0.93},
+    {14.81, 1.133},
+    {11.56, 1.59},
+    {8.65,  1.85},
+    {5.84,  2.157},
+    {4.29,  2.357},
   };
 
   private static final double[][] T5_DISTANCE_DATA = {
@@ -51,21 +51,52 @@ public class LimelightSubsystem extends SubsystemBase {
   };
 
   private static final double[][] T13_DISTANCE_DATA = {
-    {21.10, 0.93},
-    {14.81, 1.133},
-    {11.56, 1.59},
-    {8.65,  1.85},
-    {5.84,  2.157},
-    {4.29,  2.357},
+    {7.45, 0.296},
+    {1.51, 0.545},
+    {-1.39, 0.734},
+    {-3.51, 0.945},
+    {-4.56, 1.126},
+    {-5.70, 1.306},
+    {-7.03, 1.522},
+    {-8.29, 1.685},
+    {-9.32, 1.898},
+    {-10.03, 2.127},
+    {-10.59, 2.395},
+    {-10.90, 2.582},
+    {-11.17, 2.800},
+    {-11.56, 2.950},
+    {-11.71, 3.228},
   };
 
-  private static final double[][] T1_DISTANCE_DATA = {
-    {21.10, 0.93},
-    {14.81, 1.133},
-    {11.56, 1.59},
-    {8.65,  1.85},
-    {5.84,  2.157},
-    {4.29,  2.357},
+  private static final double[][] T1_DISTANCE_DATA = { // Official
+    {0.63, 0.590},
+    {-3.16, 0.843},
+    {-4.20, 0.940},
+    {-5.34, 1.08},
+    {-5.70, 1.12},
+    {-5.99, 1.157},
+    {-6.34, 1.205},
+    {-6.74, 1.278},
+    {-7.05, 1.332},
+    {-7.77, 1.480},
+    {-8.56, 1.666},
+    {-9.08, 1.830},
+    {-9.53, 1.912},
+    {-9.97, 2.040},
+    {-10.54, 2.180},
+    {-11.05, 2.361},
+    {-11.54, 2.592},
+    {-12.00, 2.866},
+    {-12.19, 3.000},
+  };
+
+  private static final double[][] T12_DISTANCE_DATA = { // Official
+    {0.52, 0.535},
+    {-2.00, 0.706},
+    {-3.57, 0.838},
+    {-4.83, 0.986},
+    {-5.69, 1.094},
+    {-6.58, 1.257},
   };
 
   // Distance → Shooter RPS
@@ -94,6 +125,7 @@ public class LimelightSubsystem extends SubsystemBase {
       case 5:  return T5_DISTANCE_DATA;
       case 13: return T13_DISTANCE_DATA;
       case 1:  return T1_DISTANCE_DATA;
+      case 12: return T12_DISTANCE_DATA;
       default: return null;
     }
   }
@@ -101,7 +133,7 @@ public class LimelightSubsystem extends SubsystemBase {
   /** Tags that are valid targets for auto-aiming/rotation. */
   public boolean isAimTag(double IDNum) {
     int id = (int) Math.round(IDNum);
-    return id == 2 || id == 5 || id == 10 || id == 13;
+    return id == 2 || id == 5 || id == 10 || id == 13 || id == 12 || id == 1;
   }
 
   /** Tags that are valid for resetting odometry pose. */

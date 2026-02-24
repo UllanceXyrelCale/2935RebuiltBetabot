@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
@@ -77,16 +78,40 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
         .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
-    // Reset pose
+    // Auto Test
     new JoystickButton(m_driverController, XboxController.Button.kA.value)
       .whileTrue(new SequentialCommandGroup(
-        new WaitCommand(5),
         new ResetPose(m_robotDrive, s_limelightSubsystem),
-        new DriveToPoint(m_robotDrive, -1.32, 0.1796, 0),
+        new DriveToPoint(m_robotDrive, 1.89, 0, 0),
+        new TurnToAngle(m_robotDrive, 90),
+        new DriveToPoint(m_robotDrive, 1.89, 1.95, 90),
+        new DriveToPoint(m_robotDrive, 1.89, 0, 180),
+        new ResetPose(m_robotDrive, s_limelightSubsystem),
+        new DriveToPoint(m_robotDrive, -1.85, 0, 180),
+        new TurnToAngle(m_robotDrive, 62.5),
+        new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(6),
+        new TurnToAngle(m_robotDrive, 180),
+        new WaitCommand(.20),
+        new ResetPose(m_robotDrive, s_limelightSubsystem),
+        new WaitCommand(.20),
+        new DriveToPoint(m_robotDrive, 0.81, 0, 180),
         new WaitCommand(5),
-        new ResetPose(m_robotDrive, s_limelightSubsystem)
+        new DriveToPoint(m_robotDrive, 2.81, 0, 180),
+        new TurnToAngle(m_robotDrive, 70),
+        new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(5)
       ));
+
+    new JoystickButton(m_driverController, XboxController.Button.kX.value)
+      .whileTrue(new TurnToAngle(m_robotDrive, s_limelightSubsystem));
+
+    // Reset Pose
+    new JoystickButton(m_driverController, XboxController.Button.kY.value)
+      .whileTrue(new ResetPose(m_robotDrive, s_limelightSubsystem));
+
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+      .whileTrue(new StartShooter(s_shooterSubsystem, s_limelightSubsystem));
     }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

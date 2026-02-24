@@ -19,21 +19,21 @@ public class ShootSequence extends SequentialCommandGroup {
       LimelightSubsystem limelight
   ) {
     addCommands(
-    new TurnToAngle(drive, limelight, 5),
 
     new ParallelCommandGroup(
-      // Step 1: Set the drivetrain to an X to lock into place
+            // Step 1: Set the drivetrain to an X to lock into place
       new RunCommand(()-> drive.setX(), drive),
 
       new SequentialCommandGroup(
         // Step 2: Spin up shooter and WAIT until at speed
-        new StartShooter(shooter, limelight)
-          .until(() -> shooter.atTargetSpeed(2.0)),
+        new StartShooter(shooter, 71)
+        .until(() -> shooter.atTargetSpeed(2.0)),
+        
         
         // Step 3: Once at speed, run everything in parallel
         new ParallelCommandGroup(
           // Keep shooter running
-          new StartShooter(shooter, limelight),
+          new StartShooter(shooter, 71),
 
           // Run floor and feeder
             new ParallelCommandGroup(
@@ -44,6 +44,7 @@ public class ShootSequence extends SequentialCommandGroup {
         )
       )
     );
+
 
   }
 }
