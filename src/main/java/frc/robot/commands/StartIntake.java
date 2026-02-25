@@ -7,7 +7,7 @@ public class StartIntake extends Command {
   public final IntakeSubsystem intakeSubsystem;
   public final double intakeTargetRPS;
 
-  public StartFeeder(IntakeSubsystem intakeSubsystem, double intakeTargetRPS) {
+  public StartIntake(IntakeSubsystem intakeSubsystem, double intakeTargetRPS) {
     this.intakeSubsystem = intakeSubsystem;
     this.intakeTargetRPS = intakeTargetRPS;
   }
@@ -17,12 +17,12 @@ public class StartIntake extends Command {
 
   @Override
   public void execute() {
-    feederSubsystem.setVelocity(feederTargetRPS);
+    intakeSubsystem.setVelocity(intakeTargetRPS);
   }
 
   @Override
   public void end(boolean interrupted) {
-    feederSubsystem.stop();
+    intakeSubsystem.stop();
   }
 
   @Override
