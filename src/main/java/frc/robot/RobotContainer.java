@@ -82,13 +82,11 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxController.Button.kA.value)
       .whileTrue(new SequentialCommandGroup(
         new ResetPose(m_robotDrive, s_limelightSubsystem),
-        new DriveToPoint(m_robotDrive, 1.89, 0, 0),
-        new TurnToAngle(m_robotDrive, 90),
+        new DriveToPoint(m_robotDrive, 1.89, 0, 90),
         new DriveToPoint(m_robotDrive, 1.89, 1.95, 90),
         new DriveToPoint(m_robotDrive, 1.89, 0, 180),
         new ResetPose(m_robotDrive, s_limelightSubsystem),
-        new DriveToPoint(m_robotDrive, -1.85, 0, 180),
-        new TurnToAngle(m_robotDrive, 62.5),
+        new DriveToPoint(m_robotDrive, -1.85, 0, 65),
         new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(6),
         new TurnToAngle(m_robotDrive, 180),
         new WaitCommand(.20),
@@ -96,22 +94,23 @@ public class RobotContainer {
         new WaitCommand(.20),
         new DriveToPoint(m_robotDrive, 0.81, 0, 180),
         new WaitCommand(5),
-        new DriveToPoint(m_robotDrive, 2.81, 0, 180),
-        new TurnToAngle(m_robotDrive, 70),
+        new DriveToPoint(m_robotDrive, 2.81, 0, 70),
         new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(5)
       ));
 
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
-      .whileTrue(new TurnToAngle(m_robotDrive, s_limelightSubsystem));
+      .whileTrue(new TurnToAngle(m_robotDrive, s_limelightSubsystem, 2));
 
     // Reset Pose
     new JoystickButton(m_driverController, XboxController.Button.kY.value)
       .whileTrue(new ResetPose(m_robotDrive, s_limelightSubsystem));
 
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem));
+
+    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value) 
       .whileTrue(new StartShooter(s_shooterSubsystem, s_limelightSubsystem));
     }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

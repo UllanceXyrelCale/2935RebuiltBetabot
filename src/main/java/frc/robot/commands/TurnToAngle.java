@@ -12,10 +12,10 @@ public class TurnToAngle extends Command {
   private final LimelightSubsystem limelightSubsystem; // null if hardcoded
   private final APPID turnPID;
 
-  private double targetAngleDeg;           // not final anymore — limelight updates it each loop
+  private double targetAngleDeg;
   private final double angleToleranceDeg;
 
-  private static final double kTurnP = 0.03;
+  private static final double kTurnP = 0.02;
   private static final double kTurnI = 0.0;
   private static final double kTurnD = 0.0;
   private static final double kMaxRot = 0.25;
@@ -41,13 +41,13 @@ public class TurnToAngle extends Command {
   public TurnToAngle(DriveSubsystem driveSubsystem, LimelightSubsystem limelightSubsystem, double angleToleranceDeg) {
     this.driveSubsystem = driveSubsystem;
     this.limelightSubsystem = limelightSubsystem;
-    this.targetAngleDeg = 0; // updated dynamically in execute()
+    this.targetAngleDeg = 0;
     this.angleToleranceDeg = angleToleranceDeg;
 
     this.turnPID = new APPID(kTurnP, kTurnI, kTurnD, angleToleranceDeg);
     this.turnPID.setMaxOutput(kMaxRot);
 
-    addRequirements(driveSubsystem); // limelight not required, just reading it
+    addRequirements(driveSubsystem);
   }
 
   public TurnToAngle(DriveSubsystem driveSubsystem, LimelightSubsystem limelightSubsystem) {
@@ -61,15 +61,23 @@ public class TurnToAngle extends Command {
 
   @Override
   public void execute() {
-    // Update target angle from limelight if in limelight mode
     if (limelightSubsystem != null) {
       if (!limelightSubsystem.hasValidTarget()) {
         driveSubsystem.drive(0, 0, 0, true);
         return;
       }
-      targetAngleDeg = driveSubsystem.getHeading() - limelightSubsystem.getTX();
+
+      // FIX 1: Instead of converting tx into a field-space heading (which created a
+      // moving target that the robot could never settle on), we now use tx directly
+      // as the error since it already represents how far off-center the tag is.
+      double tx = limelightSubsystem.getTX();
+      turnPID.setDesiredValue(0);
+      double rotCmd = turnPID.calculate(tx); // Flip sign here if robot turns the wrong way
+      driveSubsystem.drive(0.0, 0.0, rotCmd, true);
+      return;
     }
 
+    // Hardcoded angle path (unchanged)
     Pose currentPose = driveSubsystem.getPose();
     double currentAngle = Calculations.normalizeAngle360(currentPose.getAngle());
     double targetAngle  = Calculations.normalizeAngle360(targetAngleDeg);
@@ -85,15 +93,17 @@ public class TurnToAngle extends Command {
     driveSubsystem.drive(0.0, 0.0, 0.0, true);
   }
 
-  @Override
-  public boolean isFinished() {
-    // End immediately if limelight mode and target is lost
-    if (limelightSubsystem != null && !limelightSubsystem.hasValidTarget()) return true;
+@Override
+public boolean isFinished() {
+  if (limelightSubsystem != null) {
+    if (!limelightSubsystem.hasValidTarget()) return false;
+    return Math.abs(limelightSubsystem.getTX()) <= angleToleranceDeg;
+  }
 
-    Pose currentPose = driveSubsystem.getPose();
-    double currentAngle = Calculations.normalizeAngle360(currentPose.getAngle());
-    double targetAngle  = Calculations.normalizeAngle360(targetAngleDeg);
-    double angleError   = Math.abs(Calculations.shortestAngularDistance(targetAngle, currentAngle));
-    return angleError <= angleToleranceDeg;
+  Pose currentPose = driveSubsystem.getPose();
+  double currentAngle = Calculations.normalizeAngle360(currentPose.getAngle());
+  double targetAngle  = Calculations.normalizeAngle360(targetAngleDeg);
+  double angleError   = Math.abs(Calculations.shortestAngularDistance(targetAngle, currentAngle));
+  return angleError <= angleToleranceDeg;
   }
 }

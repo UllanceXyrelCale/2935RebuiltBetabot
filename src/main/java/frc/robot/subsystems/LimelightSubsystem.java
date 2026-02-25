@@ -33,12 +33,9 @@ public class LimelightSubsystem extends SubsystemBase {
   };
 
   private static final double[][] T2_DISTANCE_DATA = {
-    {21.10, 0.93},
-    {14.81, 1.133},
-    {11.56, 1.59},
-    {8.65,  1.85},
-    {5.84,  2.157},
-    {4.29,  2.357},
+    {0, 2.03},
+    {-2.74, 2.45},
+    {-5.11, 3.31},
   };
 
   private static final double[][] T5_DISTANCE_DATA = {
@@ -101,12 +98,9 @@ public class LimelightSubsystem extends SubsystemBase {
 
   // Distance → Shooter RPS
   private static final double[][] SPEED_DATA = {
-    {0.93,  56.7},
-    {1.133, 57.0},
-    {1.59,  57.5},
-    {1.85,  59.1},
-    {2.157, 60.0},
-    {2.357, 62.7},
+    {2.03,  62.5},
+    {2.45, 64},
+    {3.31, 71},
   };
 
   public LimelightSubsystem() {
@@ -134,12 +128,6 @@ public class LimelightSubsystem extends SubsystemBase {
   public boolean isAimTag(double IDNum) {
     int id = (int) Math.round(IDNum);
     return id == 2 || id == 5 || id == 10 || id == 13 || id == 12 || id == 1;
-  }
-
-  /** Tags that are valid for resetting odometry pose. */
-  public boolean isPoseResetTag(double IDNum) {
-    int id = (int) Math.round(IDNum);
-    return id == 1;
   }
 
   // -------------------------------------------------------
@@ -185,10 +173,19 @@ public class LimelightSubsystem extends SubsystemBase {
     return limelight.getEntry("tv").getDouble(0) == 1;
   }
 
-  public double getTID() { return getDoubleEntry("tid"); }
-  public double getTA()  { return getDoubleEntry("ta"); }
-  public double getTX()  { return getDoubleEntry("tx"); }
-  public double getTY()  { return getDoubleEntry("ty"); }
+  public double getTID() {
+    return getDoubleEntry("tid");
+  }
+
+  public double getTA()  {
+    return getDoubleEntry("ta");
+  }
+  public double getTX()  {
+    return getDoubleEntry("tx");
+  }
+  public double getTY()  {
+    return getDoubleEntry("ty");
+  }
 
   public Pose getPoseFromTag(double robotYawDeg) {
 
@@ -220,13 +217,12 @@ public class LimelightSubsystem extends SubsystemBase {
     if (hasValidTarget()) {
       double tid = getTID();
       distanceMeters = getTagDistance(tid);
-      SmartDashboard.putNumber("tid",              tid);
-      SmartDashboard.putNumber("ta",                getTA());
-      SmartDashboard.putNumber("ty",               getTY());
-      SmartDashboard.putNumber("tx",               getTX());
+      SmartDashboard.putNumber("tid", tid);
+      SmartDashboard.putNumber("ta", getTA());
+      SmartDashboard.putNumber("ty", getTY());
+      SmartDashboard.putNumber("tx", getTX());
       SmartDashboard.putNumber("Distance from tag", getTagDistance(tid));
-      SmartDashboard.putBoolean("Is Aim Tag",       isAimTag(tid));
-      SmartDashboard.putBoolean("Is Pose Reset Tag", isPoseResetTag(tid));
+      SmartDashboard.putBoolean("Is Aim Tag", isAimTag(tid));
     }
   }
 }
