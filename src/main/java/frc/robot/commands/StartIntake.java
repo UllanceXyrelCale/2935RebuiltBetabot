@@ -10,6 +10,8 @@ public class StartIntake extends Command {
   public StartIntake(IntakeSubsystem intakeSubsystem, double intakeTargetRPS) {
     this.intakeSubsystem = intakeSubsystem;
     this.intakeTargetRPS = intakeTargetRPS;
+
+    addRequirements(intakeSubsystem);
   }
 
   @Override
@@ -17,12 +19,12 @@ public class StartIntake extends Command {
 
   @Override
   public void execute() {
-    intakeSubsystem.setVelocity(intakeTargetRPS);
+    intakeSubsystem.setRollerVelocity(intakeTargetRPS);
   }
 
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.stop();
+    intakeSubsystem.stopRoller();
   }
 
   @Override

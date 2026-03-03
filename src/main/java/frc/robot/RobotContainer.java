@@ -18,6 +18,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AimToTag;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.ResetPose;
+import frc.robot.commands.SetPivotPosition;
 import frc.robot.commands.ShootSequence;
 import frc.robot.commands.StartFeeder;
 import frc.robot.commands.StartFloor;
@@ -120,16 +121,25 @@ public class RobotContainer {
     .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem));
 
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-      .whileTrue(new StartShooter(s_shooterSubsystem, 80));
+      .whileTrue(new StartShooter(s_shooterSubsystem, 70));
     
-    new JoystickButton(m_driverController, XboxController.Button.kA.value)
-      .whileTrue(new StartFloor(s_floorSubsystem, 15));
+    // new JoystickButton(m_driverController, XboxController.Button.kA.value)
+    //   .whileTrue(new StartFloor(s_floorSubsystem, 0.83));
     
-
     new JoystickButton(m_driverController, XboxController.Button.kB.value)
-      .whileTrue(new StartFeeder(s_feederSubsystem, 30));
+      .whileTrue(new StartFeeder(s_feederSubsystem, 0.83));
  
-    }
+    new JoystickButton(m_driverController, XboxController.Button.kX.value)
+      .whileTrue(new StartIntake(s_intakeSubsystem, 70));
+
+    new JoystickButton(m_driverController, XboxController.Button.kY.value) 
+      .whileTrue(new SetPivotPosition(s_intakeSubsystem, 0));
+    
+    new JoystickButton(m_driverController, XboxController.Button.kA.value) 
+      .whileTrue(new SetPivotPosition(s_intakeSubsystem, -90));
+  }
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

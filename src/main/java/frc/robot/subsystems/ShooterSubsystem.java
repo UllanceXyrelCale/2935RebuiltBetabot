@@ -19,8 +19,8 @@ public class ShooterSubsystem extends SubsystemBase {
   // Intialize motors and make top left motor as leader
   private final TalonFX topLeftMotor;
   private final TalonFX bottomLeftMotor;
-  private final TalonFX topRightMotor;
-  private final TalonFX bottomRightMotor;
+  // private final TalonFX topRightMotor;
+  // private final TalonFX bottomRightMotor;
 
   private final VelocityVoltage velocityRequest;
 
@@ -32,28 +32,28 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
       topLeftMotor = new TalonFX(40);
       bottomLeftMotor = new TalonFX(41);
-      topRightMotor = new TalonFX(42);
-      bottomRightMotor = new TalonFX(43);
+      // topRightMotor = new TalonFX(42);
+      // bottomRightMotor = new TalonFX(43);
 
       velocityRequest = new VelocityVoltage(0).withSlot(0);
 
       topLeftMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
       bottomLeftMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig); 
-      topRightMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
-      bottomRightMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
+      // topRightMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
+      // bottomRightMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
 
       // Set follower relationship
       bottomLeftMotor.setControl(
         new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Aligned)
       );
 
-      topRightMotor.setControl(
-        new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-      );
+      // topRightMotor.setControl(
+      //   new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+      // );
 
-      bottomRightMotor.setControl(
-        new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Opposed)
-      );
+      // bottomRightMotor.setControl(
+      //   new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Opposed)
+      // );
   }
 
   /**
@@ -111,8 +111,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter/Target RPS", targetRPS);
     SmartDashboard.putNumber("Shooter/Top Left RPS", getShooterSpeed());
     SmartDashboard.putNumber("Shooter/Bottom Left RPS", bottomLeftMotor.getVelocity().getValueAsDouble());
-    SmartDashboard.putNumber("Shooter/Top Right RPS", topRightMotor.getVelocity().getValueAsDouble());
-    SmartDashboard.putNumber("Shooter/Bottom Right RPS", bottomRightMotor.getVelocity().getValueAsDouble());
+    // SmartDashboard.putNumber("Shooter/Top Right RPS", topRightMotor.getVelocity().getValueAsDouble());
+    // SmartDashboard.putNumber("Shooter/Bottom Right RPS", bottomRightMotor.getVelocity().getValueAsDouble());
     SmartDashboard.putBoolean("Shooter/At Speed", atTargetSpeed(2.0)); // Example tolerance
   }
 }

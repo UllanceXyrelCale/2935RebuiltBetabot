@@ -1,12 +1,19 @@
 package frc.robot;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
+
 import com.revrobotics.spark.config.SparkMaxConfig;
+import static edu.wpi.first.units.Units.Amps;
 
 import frc.robot.Constants.ModuleConstants;
 
@@ -101,6 +108,7 @@ public final class Configs {
     public static final class feederMotor {        
         // Create configuration class for our feeder motors
         public static final TalonFXConfiguration feederConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration feederVoltageConfig = new TalonFXConfiguration();
 
         static {
             // Coast or Brake
@@ -127,12 +135,26 @@ public final class Configs {
             // Voltage Control
             feederConfig.Voltage.PeakForwardVoltage = 12.0;
             feederConfig.Voltage.PeakReverseVoltage = -12.0;
+
+            feederVoltageConfig.withMotorOutput(
+                 new MotorOutputConfigs()
+                    .withInverted(InvertedValue.Clockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Brake)
+            )
+                        .withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(Amps.of(120))
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(Amps.of(30))
+                    .withSupplyCurrentLimitEnable(true)
+            );
         }
     }
 
     public static final class floorMotor {
 
         public static final TalonFXConfiguration floorConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration floorVoltageConfig = new TalonFXConfiguration();
         
         static {
             floorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -155,38 +177,78 @@ public final class Configs {
             // Voltage Control  
             floorConfig.Voltage.PeakForwardVoltage = 12.0;
             floorConfig.Voltage.PeakReverseVoltage = -12.0;
+
+
+            floorVoltageConfig.withMotorOutput(
+                 new MotorOutputConfigs()
+                    .withInverted(InvertedValue.CounterClockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Brake)
+            )
+                        .withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(Amps.of(120))
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(Amps.of(30))
+                    .withSupplyCurrentLimitEnable(true)
+            );
         }
     }
 
     public static final class intakeMotor {        
         // Create configuration class for our intake motors
-        public static final TalonFXConfiguration intakeConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
+
+        public static final double PIVOT_GEAR_RATIO = 32.0;
 
         static {
+            // ── Roller ───────────────────────────────────────────────────────────────
             // Coast or Brake
-            intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            rollerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
             // Current Limits - ADDED STATOR LIMIT
-            intakeConfig.CurrentLimits.SupplyCurrentLimit = 50;
-            intakeConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-            intakeConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
-            intakeConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+            rollerConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            rollerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            rollerConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
+            rollerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
-            intakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            rollerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
             // Gear Ratio
-            intakeConfig.Feedback.SensorToMechanismRatio = 1.0;
+            rollerConfig.Feedback.SensorToMechanismRatio = 1.0;
 
             // PID VALUES
-            intakeConfig.Slot0.kP = 0.1;
-            intakeConfig.Slot0.kI = 0.0;
-            intakeConfig.Slot0.kD = 0.0;
-            intakeConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
+            rollerConfig.Slot0.kP = 0.1;
+            rollerConfig.Slot0.kI = 0.0;
+            rollerConfig.Slot0.kD = 0.0;
+            rollerConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
-            intakeConfig.Voltage.PeakForwardVoltage = 12.0;
-            intakeConfig.Voltage.PeakReverseVoltage = -12.0;
+            rollerConfig.Voltage.PeakForwardVoltage = 12.0;
+            rollerConfig.Voltage.PeakReverseVoltage = -12.0;
+
+            // ── Pivot ───────────────────────────────────────────────────────────────
+            pivotConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            pivotConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            pivotConfig.CurrentLimits.StatorCurrentLimit = 60;
+            pivotConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+
+            pivotConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
+            pivotConfig.Slot0.kP = 60.0;
+            pivotConfig.Slot0.kI = 0.0;
+            pivotConfig.Slot0.kD = 0.0;
+
+            pivotConfig.MotionMagic.MotionMagicCruiseVelocity = 80;
+            pivotConfig.MotionMagic.MotionMagicAcceleration = 160;
+            pivotConfig.MotionMagic.MotionMagicJerk = 1600;
+
+            pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+            pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 90.0 / 360.0 * PIVOT_GEAR_RATIO;
+            pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+            pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.0;
+
+            pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         }
     }
 
