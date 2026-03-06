@@ -44,7 +44,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
       // Set follower relationship
       bottomLeftMotor.setControl(
-        new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Aligned)
+        new Follower(topLeftMotor.getDeviceID(), MotorAlignmentValue.Opposed)
       );
 
       // topRightMotor.setControl(

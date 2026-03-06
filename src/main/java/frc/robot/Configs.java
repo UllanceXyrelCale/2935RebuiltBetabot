@@ -82,7 +82,7 @@ public final class Configs {
             shooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
             // Current Limits
-            shooterConfig.CurrentLimits.SupplyCurrentLimit = 60;
+            shooterConfig.CurrentLimits.SupplyCurrentLimit = 90;
             shooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             shooterConfig.CurrentLimits.StatorCurrentLimit = 80;  // Prevents overheating
             shooterConfig.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -121,7 +121,7 @@ public final class Configs {
             feederConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
-            feederConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            feederConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
             // Gear Ratio
             feederConfig.Feedback.SensorToMechanismRatio = 1.0;
@@ -199,7 +199,7 @@ public final class Configs {
         public static final TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
         public static final TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
 
-        public static final double PIVOT_GEAR_RATIO = 32.0;
+        public static final double PIVOT_GEAR_RATIO = 16.0;
 
         static {
             // ── Roller ───────────────────────────────────────────────────────────────
@@ -235,7 +235,7 @@ public final class Configs {
             pivotConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             pivotConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
-            pivotConfig.Slot0.kP = 60.0;
+            pivotConfig.Slot0.kP = 30.0;
             pivotConfig.Slot0.kI = 0.0;
             pivotConfig.Slot0.kD = 0.0;
 

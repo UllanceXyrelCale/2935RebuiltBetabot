@@ -27,7 +27,7 @@ public class ShootSequence extends SequentialCommandGroup {
 
         new ParallelCommandGroup(
           // Shooter runs the entire time, never interrupted
-          new StartShooter(shooter, 72),
+          new StartShooter(shooter, 76),
 
           new SequentialCommandGroup(
             // Wait until shooter is up to speed before feeding

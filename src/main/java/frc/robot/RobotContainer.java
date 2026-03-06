@@ -2,7 +2,10 @@ package frc.robot;
 
 import java.util.Set;
 
+import org.ejml.dense.row.decomposition.eig.SwitchingEigenDecomposition_DDRM;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -124,10 +127,10 @@ public class RobotContainer {
       .whileTrue(new StartShooter(s_shooterSubsystem, 70));
     
     // new JoystickButton(m_driverController, XboxController.Button.kA.value)
-    //   .whileTrue(new StartFloor(s_floorSubsystem, 0.83));
+    //   .whileTrue(new StartFloor(s_floorSubsystem, 50));
     
     new JoystickButton(m_driverController, XboxController.Button.kB.value)
-      .whileTrue(new StartFeeder(s_feederSubsystem, 0.83));
+      .whileTrue(new StartFeeder(s_feederSubsystem, 50));
  
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
       .whileTrue(new StartIntake(s_intakeSubsystem, 70));
@@ -136,10 +139,27 @@ public class RobotContainer {
       .whileTrue(new SetPivotPosition(s_intakeSubsystem, 0));
     
     new JoystickButton(m_driverController, XboxController.Button.kA.value) 
-      .whileTrue(new SetPivotPosition(s_intakeSubsystem, -90));
+      .whileTrue(new SetPivotPosition(s_intakeSubsystem, 90));
   }
 
+  // ----------  Helper Commands  ---------------
 
+  /***
+  * 
+  * Continuously checks the distance from the Limelight and rumbles
+  * the driver controller when within 2 meters of the target.
+  * 
+  */ 
+
+  private Command shootingRumble() {
+      return Commands.run(() -> {
+          if ((s_limelightSubsystem.getDistanceMeters() < 3.07) && (s_limelightSubsystem.getDistanceMeters() > 1.67)) {
+              m_driverController.setRumble(RumbleType.kBothRumble, 1.0);
+          } else {
+              m_driverController.setRumble(RumbleType.kBothRumble, 0.0);
+          }
+      }).finallyDo(() -> m_driverController.setRumble(RumbleType.kBothRumble, 0.0)); // always clean up
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
