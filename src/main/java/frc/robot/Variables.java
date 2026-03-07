@@ -20,4 +20,8 @@ public class Variables {
     public static class shooter {
         public static double shooterRPS = 0;
     }
+
+    public static class pivot {
+        public static double pivotPosition = 0;
+    }
 }

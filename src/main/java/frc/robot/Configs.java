@@ -197,9 +197,6 @@ public final class Configs {
     public static final class intakeMotor {        
         // Create configuration class for our intake motors
         public static final TalonFXConfiguration intakeConfig = new TalonFXConfiguration();
-        public static final TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
-
-        public static final double PIVOT_GEAR_RATIO = 32.0;
 
         static {
             // ── Intake ───────────────────────────────────────────────────────────────
@@ -227,15 +224,23 @@ public final class Configs {
             // Voltage Control
             intakeConfig.Voltage.PeakForwardVoltage = 12.0;
             intakeConfig.Voltage.PeakReverseVoltage = -12.0;
+        }
+    }
 
-            // ── Pivot ───────────────────────────────────────────────────────────────
+    public static final class pivotMotor {        
+        public static final TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
+
+        public static final double PIVOT_GEAR_RATIO = 32.0;
+
+        static {
+        // ── Pivot ───────────────────────────────────────────────────────────────
             pivotConfig.CurrentLimits.SupplyCurrentLimit = 50;
             pivotConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             pivotConfig.CurrentLimits.StatorCurrentLimit = 60;
             pivotConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             pivotConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
-            pivotConfig.Slot0.kP = 60.0;
+            pivotConfig.Slot0.kP = 30.0;
             pivotConfig.Slot0.kI = 0.0;
             pivotConfig.Slot0.kD = 0.0;
 
@@ -244,7 +249,7 @@ public final class Configs {
             pivotConfig.MotionMagic.MotionMagicJerk = 1600;
 
             pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-            pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 90.0 / 360.0 * PIVOT_GEAR_RATIO;
+            pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 120.0 / 360.0 * PIVOT_GEAR_RATIO;
             pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
             pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.0;
 

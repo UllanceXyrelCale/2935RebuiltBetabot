@@ -4,27 +4,23 @@ import java.util.Set;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SetFeederRPS;
 import frc.robot.commands.SetFloorRPS;
 import frc.robot.commands.SetIntakeRPS;
+import frc.robot.commands.SetPivotPosition;
 import frc.robot.commands.SetShooterRPS;
 import frc.robot.commands.ShootSequence;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FloorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -39,6 +35,7 @@ public class RobotContainer {
   private final FloorSubsystem s_floorSubsystem = new FloorSubsystem();
   private final FeederSubsystem s_feederSubsystem = new FeederSubsystem();
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
+  private final PivotSubsystem s_pivotSubsystem = new PivotSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -73,20 +70,30 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value) 
-      .whileTrue(new SetIntakeRPS(s_intakeSubsystem, 65));
 
-    new JoystickButton(m_driverController, XboxController.Button.kA.value) 
-      .whileTrue(new SetFloorRPS(s_floorSubsystem, 25));
+    new JoystickButton(m_driverController, XboxController.Button.kStart.value)
+      .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
-    new JoystickButton(m_driverController, XboxController.Button.kB.value) 
-      .whileTrue(new SetFeederRPS(s_feederSubsystem, 80));
-
-    new JoystickButton(m_driverController, XboxController.Button.kX.value) 
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value) 
       .whileTrue(new SetShooterRPS(s_shooterSubsystem, 60));
 
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+    new JoystickButton(m_driverController, XboxController.Button.kB.value) 
+      .whileTrue(new SetFeederRPS(s_feederSubsystem, 50));
+
+    new JoystickButton(m_driverController, XboxController.Button.kX.value) 
+      .whileTrue(new SetFloorRPS(s_floorSubsystem, 50));
+
+    new JoystickButton(m_driverController, XboxController.Button.kY.value)
+      .whileTrue(new SetPivotPosition(s_pivotSubsystem, 10));
+
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
+      .whileTrue(new SetPivotPosition(s_pivotSubsystem, 110));
+
+    new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)
       .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive));
+
+    new Trigger(() -> m_driverController.getLeftTriggerAxis() > 0.2)
+      .whileTrue(new SetIntakeRPS(s_intakeSubsystem, 50));
   
   }
 
