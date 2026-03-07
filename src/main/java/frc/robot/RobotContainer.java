@@ -3,8 +3,10 @@ package frc.robot;
 import java.util.Set;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -93,7 +95,15 @@ public class RobotContainer {
   
   }
 
-
+  // private Command shootingRumble() {
+  //     return Commands.run(() -> {
+  //         if ((Variables.limelight.distanceMeters < 3.07) && (Variables.limelight.distanceMeters > 1.67)) {
+  //             m_driverController.setRumble(RumbleType.kBothRumble, 1.0);
+  //         } else {
+  //             m_driverController.setRumble(RumbleType.kBothRumble, 0.0);
+  //         }
+  //     }).finallyDo(() -> m_driverController.setRumble(RumbleType.kBothRumble, 0.0)); // always clean up
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
