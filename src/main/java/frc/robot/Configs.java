@@ -199,7 +199,7 @@ public final class Configs {
         public static final TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
         public static final TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
 
-        public static final double PIVOT_GEAR_RATIO = 16.0;
+        public static final double PIVOT_GEAR_RATIO = 32.0;
 
         static {
             // ── Roller ───────────────────────────────────────────────────────────────
@@ -244,7 +244,7 @@ public final class Configs {
             pivotConfig.MotionMagic.MotionMagicJerk = 1600;
 
             pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-            pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 90.0 / 360.0 * PIVOT_GEAR_RATIO;
+            pivotConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 120.0 / 360.0 * PIVOT_GEAR_RATIO;
             pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
             pivotConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.0;
 
